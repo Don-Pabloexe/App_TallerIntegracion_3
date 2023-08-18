@@ -1,0 +1,45 @@
+#sala{
+    background-image:url(/src/img/18625.png);
+    background-size: 50%;
+    background-repeat:no-repeat;
+    background-position:center;
+    padding: 100px;
+    margin: 100px;
+    width: 100px;
+    height: 70px;
+    cursor: pointer;
+    /* Otras propiedades de estilo que desees aplicar */
+  }
+#tutor{
+    background-image:url(/src/img/tutores.png);
+    background-size: 65%;
+    background-repeat:no-repeat;
+    background-position:center;
+    padding: 100px;
+    margin: 100px;
+    width: 100px;
+    height: 70px;
+    cursor: pointer;
+    
+}
+#room{
+    display: inline-block;
+    padding: 10px 20px; /* Ajusta el padding según tus necesidades */
+    background-color: none; /* Color de fondo del botón */
+    color: none; /* Color del texto */
+    text-decoration: none;
+    cursor: pointer;
+    background-size: 300%;
+}
+#solicitar{
+    background-image:url(/src/img/libreta.png);
+    background-size: 50%;
+    background-repeat:no-repeat;
+    background-position:center;
+    padding: 100px;
+    margin: 100px;
+    width: 100px;
+    height: 70px;
+    cursor: pointer;
+    
+}
