@@ -1,20 +1,38 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  View,
+  Text,
+  StatusBar,
+} from 'react-native';
+import ChatBot from 'react-native-chatbot';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Hola buenas soy  palblo chilee que pasa putos dksakjdklsadjslakdkdjlasdjskladjaskld!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+// import { createStackNavigator, createAppContainer } from 'react-navigation';
+import Chat from './js/chat';
+
+const steps = [
+  {
+    id:'0',
+    message: 'My First ChatBot',
+    trigger:'1'
   },
-});
+  {
+    id: '1',
+    message: 'Bye!',
+    end: true,
+  },
+]
+
+
+
+const AppNavigator = createStackNavigator({
+  ChatBot:{screen:Chat},
+ 
+})
+
+export default createAppContainer(AppNavigator)

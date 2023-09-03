@@ -6,7 +6,33 @@ import sala from './../img/18625.png';
 import tutor from './../img/tutores.png';
 import horario from './../img/libreta.png';
 import { color } from 'react-native-reanimated';
+import img from '../img';
+import {
+  initialize,
+  showMessaging,
+} from '@robbywh/react-native-zendesk-messaging';
+
 const HomeScreen = ({ navigation }) => {
+
+  React.useEffect(()=>{
+    initialize("eyJzZXR0aW5nc191cmwiOiJodHRwczovL25vZm9ybW9kZW5pbmd1bmFjb21wYWlhLnplbmRlc2suY29tL21vYmlsZV9zZGtfYXBpL3NldHRpbmdzLzAxSDlFMENINFRaTkE2NUhNQzUwRDJBQ1dKLmpzb24ifQ==")
+  },[]);
+
+  const chatBotBtn = () => (
+    <TouchableOpacity
+    onPress={() => showMessaging()}
+    style={{
+    position: 'absolute',
+    bottom: 10, right: 10,
+    height: 60, width: 60,
+    backgroundColor: 'black',
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems:'center'
+    }}>
+    <Image style={{height: 50, width: 50}} source={img.perro} />
+    </TouchableOpacity>
+  )
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -38,6 +64,7 @@ const HomeScreen = ({ navigation }) => {
         source={horario}
         />
         </TouchableOpacity>
+        {chatBotBtn()}
     </View>
   );
 };
