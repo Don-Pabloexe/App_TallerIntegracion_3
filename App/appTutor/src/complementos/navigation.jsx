@@ -7,6 +7,8 @@ import DetailsScreen from './Salas';
 import Tutores from './Tutores';
 import Horarios from './Horarios';
 import { Image, View, Text, StyleSheet } from 'react-native';
+import Chatbot from './chatbot';
+
 const color = "#1A9CEC"
 const SECONDcolor = "#FFF8C8"
 const Stack = createStackNavigator();
@@ -84,7 +86,9 @@ const AppNavigator = () => {
             </View>
           ),
         })}/>
-        <Tab.Screen name="Horarios" component={Horarios}
+        
+
+        <Tab.Screen name="bot" component={Chatbot}
         options={({ route }) => ({
           headerTitleAlign: 'center',
           tabBarLabel: '',
@@ -92,6 +96,28 @@ const AppNavigator = () => {
             backgroundColor: color, // Cambia el color de fondo del encabezado
           },
           headerTintColor: 'white',
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center' }}>
+              <Image
+                source={require('./../img/libreta.png')}
+                style={{
+                  width: 30,
+                  height: 30,
+                  tintColor: focused ? color : 'gray', // Cambiar el color de la imagen cuando esté seleccionada
+                }}
+              />
+              <Text style={{ color: focused ? color : 'gray' }}>Horas</Text>
+            </View>
+          ),
+        })}/>
+        <Tab.Screen name="Horarios" component={Horarios}
+        options={({ route }) => ({
+          headerTitleAlign: 'center',
+          tabBarLabel: '',
+          headerStyle: {
+            backgroundColor: color, // Cambia el color de fondo del encabezado
+          },
+          headerTintColor: 'white', 
           tabBarIcon: ({ focused }) => (
             <View style={{ alignItems: 'center' }}>
               <Image

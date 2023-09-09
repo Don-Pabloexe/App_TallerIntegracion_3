@@ -1,44 +1,41 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, Button } from 'react-native';
 
 const Tutores = () => {
+  const [count, setCount] = useState(0);
+  const onPress = () => {
+    setCount(prevCount => prevCount + 1);
+  };
   return (
     <View style={styles.container}>
-      <Text>TUTORES</Text>
-      
+      <View style={styles.buttonContainer}>
+        <Button title="Asesorias" onPress={onPress} />
+        <Button title="Recursos" onPress={onPress} />
+        <Button title="Ayuda" onPress={onPress} />
+        <Button title="Consultas" onPress={onPress} />
+      </View>
+      <View style={styles.countContainer}>
+        <Text style={styles.countText}>{count}</Text>
+      </View>
     </View>
   );
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignContent: "center",
-    flexDirection: 'row',
-    padding: 20,
-    paddingBottom: 5,
-    paddingTop: 5,
-    backgroundColor: "#FFFDED"
-    
-  },
-  button: {
-    top: 300,
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#E3E3E3',
-    borderRadius: 10,
-    margin: 10,
-    width: 100, 
-    height: 100
-    
   },
-  image: {
-    width: 90,
-    height: 90,
-    
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
   },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
+  countContainer: {
+    marginTop: 20,
+  },
+  countText: {
+    fontSize: 20,
   },
 });
-
 export default Tutores;

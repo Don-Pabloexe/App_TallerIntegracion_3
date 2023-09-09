@@ -1,30 +1,41 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet} from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, Button } from 'react-native';
 
 const DetailsScreen = () => {
+  const [count, setCount] = useState(0);
+  const onPress = () => {
+    setCount(prevCount => prevCount + 1);
+  };
   return (
     <View style={styles.container}>
-      <Text>Pantalla de Detalles</Text>
-      <Image style = {styles.logo} source={require('./../img/libreta.png')}/>
+      <View style={styles.buttonContainer}>
+        <Button title="Direcciones" onPress={onPress} />
+        <Button title="Ubicaciones" onPress={onPress} />
+        <Button title="Ayudantia" onPress={onPress} />
+        <Button title="Numeros" onPress={onPress} />
+      </View>
+      <View style={styles.countContainer}>
+        <Text style={styles.countText}>{count}</Text>
+      </View>
     </View>
   );
 };
 const styles = StyleSheet.create({
-  logo: {
-    width: 100,
-    height: 100,
-    alignSelf:'center',
-  },
   container: {
     flex: 1,
-    alignContent: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonContainer: {
     flexDirection: 'row',
-    padding: 20,
-    paddingBottom: 5,
-    paddingTop: 5,
-    backgroundColor: "#FFFDED"
-  }
- 
+    justifyContent: 'space-around',
+    width: '100%',
+  },
+  countContainer: {
+    marginTop: 20,
+  },
+  countText: {
+    fontSize: 20,
+  },
 });
-
 export default DetailsScreen;
