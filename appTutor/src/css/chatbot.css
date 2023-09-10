@@ -1,0 +1,30 @@
+.react-chatbot-kit-chat-container {
+    border: 1px solid #d6d6d6;
+    
+  }
+  .react-chatbot-kit-chat-message-container {
+    background-color: rgb(235, 252, 252);
+}
+.react-chatbot-kit-chat-header{
+    background-color: rgb(218, 242, 252);
+    font-weight: bold;
+  }
+  .react-chatbot-kit-chat-bot-avatar-container {
+    background-image: url('./../img/perro.jpg');
+    background-size: cover;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    
+  }
+  #bubble{
+    background-image: url(/src/img/perro.jpg);
+    background-size: 100%;
+    border-radius: 100%;
+    background-repeat:no-repeat;
+    background-position:center;
+    padding: 30px;
+    cursor: pointer;
+    border-color: rgb(88, 194, 255);
+  }
+  
