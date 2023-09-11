@@ -16,8 +16,8 @@ class Chatbot extends Component {
 
     state ={
         messages: [
-            {_id: 2, text: 'Hola soy perro-bot', createdAt: new Date(), user: BOT},
-            {_id: 1, text: 'hola', createdAt: new Date(), user: BOT},
+            {_id: 2, text: 'Soy el perro-bot asistente para cualquier tipo de ayuda', createdAt: new Date(), user: BOT},
+            {_id: 1, text: 'Buenos dias!', createdAt: new Date(), user: BOT},
         ],
         id: 1,
         name: '',
@@ -79,7 +79,7 @@ class Chatbot extends Component {
     render() {
         return (
 
-            <View style ={{flex: 1, backgroundColor: '#fff'}}>
+            <View style ={{flex: 1, backgroundColor: '#FAF3E0'}}>
               <Text></Text>
                 <GiftedChat 
                 messages={this.state.messages}
@@ -93,6 +93,8 @@ class Chatbot extends Component {
         );
     }
 }
+
+
 
 
 export default Chatbot;
