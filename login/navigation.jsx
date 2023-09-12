@@ -8,7 +8,7 @@ import Horarios from './Horarios';
 import { Image, View, Text, StyleSheet } from 'react-native';
 import LoginScreen from './login';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-const color = "#1A9CEC"
+const color = '#1C74AA'
 const SECONDcolor = "#FFF8C8"
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -18,9 +18,30 @@ const Acceder = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
-          name="Login"
+          name="UCTutor"
           component={LoginScreen}
-          options={{ headerShown: true }} // Oculta el encabezado en la pantalla de inicio de sesión
+          options={({ route }) => ({
+            headerTitleAlign: 'center',
+            backgroundColor: SECONDcolor,
+            headerStyle: {
+              backgroundColor: color, // Cambia el color de fondo del encabezado
+            },
+            headerTintColor: 'white',
+            tabBarLabel: '',
+            tabBarIcon: ({ focused }) => (
+              <View style={{ alignItems: 'center' }}>
+                <Image
+                  source={require('./../img/18625.png')}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: focused ? color : 'gray', // Cambiar el color de la imagen cuando esté seleccionada
+                  }}
+                />
+                <Text style={{ color: focused ? color : 'gray' }}>Inicio</Text>
+              </View>
+            ),
+          })}
         />
         <Stack.Screen name="accesoexitoso" component={AppNavigator} options={{ headerShown: false }} />
       </Stack.Navigator>
