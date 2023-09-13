@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "@expo/webpack-config": "^18.1.2",
+    "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/stack": "^6.3.17",
     "@robbywh/react-native-zendesk-messaging": "^1.1.0",
+    "date-fns": "^2.30.0",
     "expo": "~48.0.17",
     "expo-status-bar": "~1.4.4",
     "react": "18.2.0",

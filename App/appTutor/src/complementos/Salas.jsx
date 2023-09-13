@@ -1,41 +1,67 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 const DetailsScreen = () => {
-  const [count, setCount] = useState(0);
-  const onPress = () => {
-    setCount(prevCount => prevCount + 1);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleImageSelection = (image) => {
+    setSelectedImage(image);
   };
+
   return (
     <View style={styles.container}>
-      <View style={styles.buttonContainer}>
-        <Button title="Direcciones" onPress={onPress} />
-        <Button title="Ubicaciones" onPress={onPress} />
-        <Button title="Ayudantia" onPress={onPress} />
-        <Button title="Numeros" onPress={onPress} />
-      </View>
-      <View style={styles.countContainer}>
-        <Text style={styles.countText}>{count}</Text>
-      </View>
+      <Text style={styles.title}>¿Cual es tu Campus?</Text>
+      
+      {selectedImage && (
+        <Image style={styles.logo} source={selectedImage} />
+      )}
+
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: '#00BFFF' }]} // Cambia el color a celeste (#00BFFF)
+        onPress={() => handleImageSelection(require('./../img/libreta.png'))}
+      >
+        <Text style={styles.buttonText}>CAMPUS JUAN PABLO II</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: '#00BFFF' }]} // Cambia el color a celeste (#00BFFF)
+        onPress={() => handleImageSelection(require('./../img/perro.jpg'))}
+      >
+        <Text style={styles.buttonText}>CAMPUS SAN FRANCISCO</Text>
+      </TouchableOpacity>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FFFDED',
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
   },
-  countContainer: {
-    marginTop: 20,
+  logo: {
+    width: 100,
+    height: 100,
+    alignSelf: 'center',
+    marginBottom: 16,
   },
-  countText: {
-    fontSize: 20,
+  button: {
+    backgroundColor: '#E3E3E3',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 16,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
   },
 });
+
 export default DetailsScreen;

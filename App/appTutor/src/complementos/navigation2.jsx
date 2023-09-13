@@ -1,21 +1,40 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './Home';
 import DetailsScreen from './Salas';
 import Tutores from './Tutores';
 import Horarios from './Horarios';
 import { Image, View, Text, StyleSheet } from 'react-native';
+import LoginScreen from './login';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 const color = "#1A9CEC"
 const SECONDcolor = "#FFF8C8"
 const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator()
-const AppNavigator = () => {
+const Tab = createBottomTabNavigator();
+
+const Acceder = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator initialRouteName="Inicio" >
-        <Tab.Screen name="Inicio" component={HomeScreen}
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: true }} // Oculta el encabezado en la pantalla de inicio de sesión
+        />
+        <Stack.Screen name="accesoexitoso" component={AppNavigator} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+
+const AppNavigator = () => {
+  return (
+
+  
+      <Tab.Navigator initialRouteName="Home" >
+        <Tab.Screen name="Home" component={HomeScreen}
         options={({ route }) => ({
           headerTitleAlign: 'center',
           backgroundColor: SECONDcolor,
@@ -108,7 +127,7 @@ const AppNavigator = () => {
         })}/>
       </Tab.Navigator>
       
-    </NavigationContainer>
+
   );
 };
 const styles = StyleSheet.create({
@@ -121,4 +140,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppNavigator;
+export default Acceder;
