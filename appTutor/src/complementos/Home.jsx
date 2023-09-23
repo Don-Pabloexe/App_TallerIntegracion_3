@@ -1,75 +1,57 @@
-import { setStatusBarBackgroundColor } from 'expo-status-bar';
 import React from 'react';
-import { View, Button, StyleSheet, Image, Text } from 'react-native';
-import { TouchableOpacity } from 'react-native-web';
-import sala from './../img/18625.png';
-import tutor from './../img/tutores.png';
-import horario from './../img/libreta.png';
-import { color } from 'react-native-reanimated';
+import { View, TouchableOpacity, Image, Text, StyleSheet } from 'react-native';
+import { CommonStyles, HomeStyles, Info, Tutor, Sala, Horario } from './../css/Home';
+
 const HomeScreen = ({ navigation }) => {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-      style={[styles.button, {  }]}
-      onPress={() => navigation.navigate('Salas', { imageRoute: sala})}
-      >  
-        <Image
-        style = {styles.image}
-        source={sala}
-        />
-        </TouchableOpacity>
-      
-      
+    <View style={CommonStyles.container}>
+      <View style={styles.row}>
         <TouchableOpacity
-      style={[styles.button, {}]}
-      onPress={() => navigation.navigate('Tutores', {imageRoute: tutor})}
-      >  
-        <Image
-        style = {styles.image}
-        source={tutor}
-        />
+          style={HomeStyles.button}
+          onPress={() => navigation.navigate('Salas')}
+        >
+          <Image
+            style={HomeStyles.image}
+            source={Sala}
+          />
         </TouchableOpacity>
+
         <TouchableOpacity
-      style={[styles.button, { width: 100, height: 100 }]}
-      onPress={() => navigation.navigate('Horarios', {imageRoute: horario})}
-      >  
-        <Image
-        style = {styles.image}
-        source={horario}
-        />
+          style={HomeStyles.button}
+          onPress={() => navigation.navigate('Tutores')}
+        >
+          <Image
+            style={HomeStyles.image}
+            source={Tutor}
+          />
         </TouchableOpacity>
+      </View>
+
+      <View style={styles.row}>
+        <TouchableOpacity
+          style={HomeStyles.button}
+          onPress={() => navigation.navigate('Horarios')}
+        >
+          <Image
+            style={HomeStyles.image}
+            source={Horario}
+          />
+        </TouchableOpacity>
+
+        {/* Agrega más botones aquí */}
+      </View>
+
+      {/* Agrega más filas de botones si es necesario */}
     </View>
   );
 };
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignContent: "center",
-    flexDirection: 'row',
-    padding: 20,
-    paddingBottom: 5,
-    paddingTop: 5,
-    backgroundColor: "#FFFDED"
-    
-  },
-  button: {
-    top: 300,
-    alignItems: 'center',
-    backgroundColor: '#E3E3E3',
-    borderRadius: 10,
-    margin: 10,
-    width: 100, 
-    height: 100
-    
-  },
-  image: {
-    width: 90,
-    height: 90,
-    
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
+  row: {
+    flexDirection: 'row', // Organiza los botones en una fila horizontal
+    justifyContent: 'space-between', // Distribuye los botones de manera uniforme en el espacio horizontal
+    marginBottom: 16, // Añade margen inferior para separar las filas
   },
 });
+
 export default HomeScreen;
