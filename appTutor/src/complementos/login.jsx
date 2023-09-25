@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
-import {styl} from './../css/Home';
+
+const image = require('./../img/logo_uct.png')
 
 const LoginScreen = ({ navigation }) => {
   
@@ -22,7 +23,7 @@ const LoginScreen = ({ navigation }) => {
   return (
 
     <View style={styles.container}>
-       
+    <ImageBackground source={image} resizeMode = "stretch" style = {styles.image}>
       <Text style={styles.label}>Nombre de usuario:</Text>
       <TextInput
         value={username}
@@ -44,35 +45,47 @@ const LoginScreen = ({ navigation }) => {
       >
         <Text style={[styles.buttonText, { color: 'white' }]}>Iniciar sesión</Text>
       </TouchableOpacity>
-      
+    </ImageBackground>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#D6EBFD', // Color de fondo del contenedor
+    backgroundColor: 'white', // Color de fondo del contenedor
+    
   },
+
   label: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
+
   },
+
+  image: {
+    justifyContent: 'center',
+    paddingHorizontal: 30,
+    paddingVertical: 80,
+  },
+
   input: {
     width: '100%',
     height: 40,
-    borderColor: 'gray', // Color del borde
+    borderColor: '#075fb0', // Color del borde
     backgroundColor: 'white',
-    borderWidth: 1,
+    borderWidth: 2,
     borderRadius: 5,
     marginBottom: 16,
     paddingHorizontal: 8,
     width: 280,
     height: 30
   },
+   
   button: {
     borderRadius:5,
     width: 100,
@@ -81,7 +94,6 @@ const styles = StyleSheet.create({
     alignItems:"center",
     backgroundColor: '#258FD0',
     
-
   },
 });
 export default LoginScreen;

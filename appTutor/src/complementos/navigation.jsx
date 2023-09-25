@@ -2,25 +2,17 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './Home';
-import DetailsScreen from './Salas';
-import Tutores from './Tutores';
-import Horarios from './Horarios';
-import RecursosScreen from './recursos';
-import BlogScreen from './Blog';
-import Chatbot from './chatbot';
-import { Image, View, Text, StyleSheet, ImageBackground } from 'react-native';
+import { Image, View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import LoginScreen from './login';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { barratop } from './../css/navigation'
-import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
+import { barratop } from './../css/navigation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { CommonStyles, HomeStyles, Info, Tutor, Sala, Horario, blog, recursos, chatbot } from './../css/Home';
 
 const color = '#1C74AA'
 const SECONDcolor = "#FFF8C8"
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-const width = 7;
-const height = 3;
 
 const CustomHeader = () => {
   return (
@@ -53,10 +45,11 @@ const Acceder = () => {
 
 const AppNavigator = () => {
   return (
-
-      <Tab.Navigator initialRouteName="Home" screenOptions = {{tabBarStyle: { position: 'fixed' },}}>  
+    
+      <Tab.Navigator initialRouteName="Home" screenOptions = {{tabBarStyle: { position: 'absolute', height: 60} ,}}>       
         <Tab.Screen name="Home" component={HomeScreen}
           options={({ route }) => ( {
+          tabBarLabel: false,
           headerTitleAlign: 'center',
           backgroundColor: SECONDcolor,
           headerStyle: {
@@ -72,6 +65,7 @@ const AppNavigator = () => {
         <Tab.Screen name = "Salas" component={HomeScreen}
           options={({ route }) => ( {
           headerTitleAlign: 'center',
+          tabBarLabel: false,
           backgroundColor: SECONDcolor,
           headerStyle: {
           backgroundColor: color, // Cambia el color de fondo del encabezado
@@ -85,6 +79,7 @@ const AppNavigator = () => {
 
         <Tab.Screen name = "Tutores" component={HomeScreen}
           options={({ route }) => ( {
+          tabBarLabel: false,
           headerTitleAlign: 'center',
           backgroundColor: SECONDcolor,
           headerStyle: {
@@ -93,12 +88,13 @@ const AppNavigator = () => {
           headerTintColor: 'white',
           tabBarLabel: '',
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "account-group" color={'#1C74AA'} size={size} />       
+            <MaterialCommunityIcons name = "school-outline" color={'#1C74AA'} size={size} />       
           ),
         })}/>
 
         <Tab.Screen name = "Horas" component={HomeScreen}
           options={({ route }) => ( {
+          tabBarLabel: false,  
           headerTitleAlign: 'center',
           backgroundColor: SECONDcolor,
           headerStyle: {
@@ -111,8 +107,9 @@ const AppNavigator = () => {
           ),
         })}/>
 
-        <Tab.Screen name = "Foro" component={HomeScreen}
+        <Tab.Screen name = "Blog" component={HomeScreen}
           options={({ route }) => ( {
+          tabBarLabel: false,
           headerTitleAlign: 'center',
           backgroundColor: SECONDcolor,
           headerStyle: {
@@ -121,12 +118,13 @@ const AppNavigator = () => {
           headerTintColor: 'white',
           tabBarLabel: '',
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "forum" color={'#1C74AA'} size={size} />       
+            <MaterialCommunityIcons name = "account-group" color={'#1C74AA'} size={size} />       
           ),
         })}/>
 
         <Tab.Screen name = "Recursos" component={HomeScreen}
           options={({ route }) => ( {
+          tabBarLabel: false, 
           headerTitleAlign: 'center',
           backgroundColor: SECONDcolor,
           headerStyle: {
@@ -139,7 +137,7 @@ const AppNavigator = () => {
           ),
         })}/>
 
-      </Tab.Navigator>
+      </Tab.Navigator>    
       
   );
 };
