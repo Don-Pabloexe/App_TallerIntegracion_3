@@ -31,7 +31,7 @@
     position: relative;
   }
   #invisible{
-    position: absolute;
+    position: relative;
     top: 0;
     left: 0;
     width: 100%;
@@ -43,4 +43,5 @@
     position: absolute;
     top: 40%;
     right: 5%;
+    height: 100%;
   }

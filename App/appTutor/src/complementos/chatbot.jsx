@@ -149,19 +149,18 @@ class Chatbot extends Component {
         </TouchableOpacity>
         
         {/* Renderizamos el chat si está abierto */}
-        {isChatOpen && (
-          <View style={{ flex: 1 , backgroundColor: '#FAF3E0' }}>
+      
+          <View style={{flex:1, backgroundColor: '#FAF3E0', zIndex:99999, height:'100%',}}>
             <GiftedChat
               messages={this.state.messages}
               onSend={(message) => this.onSend(message)}
               onQuickReply={(quickReply) => this.onQuickReply(quickReply)}
               user={{ _id: 1 }}
-              renderBubble={this.renderBubble} // Utiliza la función renderBubble
+              //renderBubble={this.renderBubble} // Utiliza la función renderBubble
               dateFormat={'ll HH:mm'} // Establece el formato de la fecha
               locale={'es'} // Establece el idioma a español
             />
           </View>
-        )}
       </SafeAreaView>
     );
   }
