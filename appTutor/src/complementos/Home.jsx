@@ -1,8 +1,7 @@
+
 import React from 'react';
 import { View, TouchableOpacity, Image, Text, StyleSheet } from 'react-native';
 import { CommonStyles, HomeStyles, Info, Tutor, Sala, Horario, blog, recursos, chatbot } from './../css/Home';
-
-const image = {uri: 'https://legacy.reactjs.org/logo-og.png'};
 
 const HomeScreen = ({ navigation }) => {
   return (

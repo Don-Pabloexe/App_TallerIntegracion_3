@@ -7,12 +7,12 @@ import LoginScreen from './login';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { barratop } from './../css/navigation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { CommonStyles, HomeStyles, Info, Tutor, Sala, Horario, blog, recursos, chatbot } from './../css/Home';
 
 const color = '#1C74AA'
 const SECONDcolor = "#FFF8C8"
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const tamaño = 30;
 
 const CustomHeader = () => {
   return (
@@ -46,11 +46,11 @@ const Acceder = () => {
 const AppNavigator = () => {
   return (
     
-      <Tab.Navigator initialRouteName="Home" screenOptions = {{tabBarStyle: { position: 'absolute', height: 60} ,}}>       
-        <Tab.Screen name="Home" component={HomeScreen}
+      <Tab.Navigator initialRouteName = "Home" screenOptions = {{tabBarStyle: { position: 'absolute', height: 75}}}>       
+        <Tab.Screen name = "Home" component={HomeScreen}
           options={({ route }) => ( {
-          tabBarLabel: false,
           headerTitleAlign: 'center',
+          tabBarShowLabel: false,
           backgroundColor: SECONDcolor,
           headerStyle: {
           backgroundColor: color, // Cambia el color de fondo del encabezado
@@ -58,7 +58,7 @@ const AppNavigator = () => {
           headerTintColor: 'white',
           tabBarLabel: '',
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name="home" color={'#1C74AA'} size={size} />       
+            <MaterialCommunityIcons name = "home" color = {'#1C74AA'} size = {tamaño} />       
           ),
         })}/>
 
@@ -73,7 +73,7 @@ const AppNavigator = () => {
           headerTintColor: 'white',
           tabBarLabel: '',
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "door" color={'#1C74AA'} size={size} />       
+            <MaterialCommunityIcons name = "door" color={'#1C74AA'} size={tamaño} />       
           ),
         })}/>
 
@@ -88,7 +88,7 @@ const AppNavigator = () => {
           headerTintColor: 'white',
           tabBarLabel: '',
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "school-outline" color={'#1C74AA'} size={size} />       
+            <MaterialCommunityIcons name = "school-outline" color={'#1C74AA'} size={tamaño} />       
           ),
         })}/>
 
@@ -103,7 +103,7 @@ const AppNavigator = () => {
           headerTintColor: 'white',
           tabBarLabel: '',
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "book-open-page-variant-outline" color={'#1C74AA'} size={size} />       
+            <MaterialCommunityIcons name = "book-open-page-variant-outline" color={'#1C74AA'} size={tamaño} />       
           ),
         })}/>
 
@@ -118,7 +118,7 @@ const AppNavigator = () => {
           headerTintColor: 'white',
           tabBarLabel: '',
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "account-group" color={'#1C74AA'} size={size} />       
+            <MaterialCommunityIcons name = "account-group" color={'#1C74AA'} size={tamaño} />       
           ),
         })}/>
 
@@ -133,7 +133,7 @@ const AppNavigator = () => {
           headerTintColor: 'white',
           tabBarLabel: '',
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "bookshelf" color={'#1C74AA'} size={size} />       
+            <MaterialCommunityIcons name = "bookshelf" color={'#1C74AA'} size={tamaño} />       
           ),
         })}/>
 
@@ -149,7 +149,6 @@ const styles = StyleSheet.create({
   },
 
   titulo:{
-    left: 200,
     fontSize: 26,
   },
 });
