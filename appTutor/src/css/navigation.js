@@ -1,6 +1,4 @@
-
 import { StyleSheet } from 'react-native';
-
 const barratop = StyleSheet.create({
 
     backgroundImage: {
@@ -9,9 +7,9 @@ const barratop = StyleSheet.create({
       alignItems: 'center',
       width: 160,
       height: 50,
-      bottom: 25,
+      bottom: 25
     },
-
+    
     container: {
       bottom: 1,
       padding: 20

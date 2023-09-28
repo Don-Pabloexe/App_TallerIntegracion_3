@@ -8,30 +8,39 @@ import blog from './../img/blog.png';
 import recursos from './../img/recursos.png';
 
 const CommonStyles = StyleSheet.create({
+
   container: {
+
+    flex: 1,
     alignContent: "center",
-    backgroundColor: "#FFFFF",
+    backgroundColor: "#EAEAEA",
+    
   },
+
   buttonText: {
     color: 'white',
     fontSize: 18,
   },
+
 });
 
 const HomeStyles = StyleSheet.create({
+
   button: {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#96d0fa',
     borderRadius: 10,
-    margin: 45,
-    width: 70, 
-    height: 70,
+    margin: 50,
+    width: 90, 
+    height: 90,
     shadowColor: 'rgba(0, 0, 0, 0.5)', // Color de la sombra
+
     shadowOffset: {
       width: 10,
       height: 5,
     },
+
     shadowOpacity: 0.5, // Opacidad de la sombra
     shadowRadius: 3, // Radio de la sombra
     elevation: 5, // Efecto de elevación en Android
@@ -56,10 +65,12 @@ const HomeStyles = StyleSheet.create({
     height: '50%',
   
   },
+
   info:{
     width: 20,
     height:20, 
   }
+
 });
 
 const styl = StyleSheet.create({

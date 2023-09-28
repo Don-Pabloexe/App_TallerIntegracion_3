@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, TouchableOpacity, Image, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Image, Text, StyleSheet, ImageBackground } from 'react-native';
 import { CommonStyles, HomeStyles, Info, Tutor, Sala, Horario, blog, recursos, chatbot } from './../css/Home';
 
 const HomeScreen = ({ navigation }) => {
@@ -84,7 +84,6 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row', // Organiza los botones en una fila horizontal
     justifyContent: 'center', // Distribuye los botones de manera uniforme en el espacio horizontal
-    marginBottom: 0, // Añade margen inferior para separar las filas
   },
 });
 

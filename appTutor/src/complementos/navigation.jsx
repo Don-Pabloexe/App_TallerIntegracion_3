@@ -1,11 +1,19 @@
+
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './Home';
-import { Image, View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+import DetailsScreen from './Salas';
+import Tutores from './Tutores';
+import Horarios from './Horarios';
+import RecursosScreen from './recursos';
+import BlogScreen from './Blog';
+import Chatbot from './chatbot';
+import { Image, View, Text, StyleSheet, ImageBackground } from 'react-native';
 import LoginScreen from './login';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { barratop } from './../css/navigation';
+import {barratop} from './../css/navigation'
+
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const color = '#1C74AA'
@@ -17,11 +25,8 @@ const tamaño = 30;
 const CustomHeader = () => {
   return (
       <View style={barratop.container}>
-       <ImageBackground
-      source={require('./../img/logo.png')}
-      style={barratop.backgroundImage}
-      resizeMode='cover'
-    ></ImageBackground>
+       <ImageBackground source = {require('./../img/logo.png')} style = {barratop.backgroundImage}resizeMode='cover'>
+       </ImageBackground>
       </View>
   );
 };
@@ -37,7 +42,7 @@ const Acceder = () => {
           headerTitle: () => <CustomHeader />,
         }}
       />
-        <Stack.Screen name="accesoexitoso" component={AppNavigator} options={{ headerShown: false }} />
+        <Stack.Screen name="accesoexitoso" component={AppNavigator} options={{ headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -46,8 +51,8 @@ const Acceder = () => {
 const AppNavigator = () => {
   return (
     
-      <Tab.Navigator initialRouteName = "Home" screenOptions = {{tabBarStyle: { position: 'absolute', height: 75}}}>       
-        <Tab.Screen name = "Home" component={HomeScreen}
+      <Tab.Navigator initialRouteName = "Home" screenOptions = {{tabBarStyle: {position: 'absolute', height: 75, backgroundColor: color}}}>   
+        <Tab.Screen name = "Home" component = {HomeScreen}
           options={({ route }) => ( {
           headerTitleAlign: 'center',
           tabBarShowLabel: false,
@@ -58,14 +63,14 @@ const AppNavigator = () => {
           headerTintColor: 'white',
           tabBarLabel: '',
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "home" color = {'#1C74AA'} size = {tamaño} />       
+            <MaterialCommunityIcons name = "home" color = {'white'} size = {tamaño} />       
           ),
         })}/>
 
-        <Tab.Screen name = "Salas" component={HomeScreen}
+        <Tab.Screen name = "Salas" component={DetailsScreen}
           options={({ route }) => ( {
           headerTitleAlign: 'center',
-          tabBarLabel: false,
+          tabBarShowLabel: false,
           backgroundColor: SECONDcolor,
           headerStyle: {
           backgroundColor: color, // Cambia el color de fondo del encabezado
@@ -73,14 +78,14 @@ const AppNavigator = () => {
           headerTintColor: 'white',
           tabBarLabel: '',
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "door" color={'#1C74AA'} size={tamaño} />       
+            <MaterialCommunityIcons name = "door" color = {'white'} size = {tamaño} />       
           ),
         })}/>
 
-        <Tab.Screen name = "Tutores" component={HomeScreen}
+        <Tab.Screen name = "Tutores" component={Tutores}
           options={({ route }) => ( {
-          tabBarLabel: false,
           headerTitleAlign: 'center',
+          tabBarShowLabel: false,
           backgroundColor: SECONDcolor,
           headerStyle: {
           backgroundColor: color, // Cambia el color de fondo del encabezado
@@ -88,14 +93,14 @@ const AppNavigator = () => {
           headerTintColor: 'white',
           tabBarLabel: '',
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "school-outline" color={'#1C74AA'} size={tamaño} />       
+            <MaterialCommunityIcons name = "school-outline" color = {'white'} size = {tamaño} />       
           ),
         })}/>
 
-        <Tab.Screen name = "Horas" component={HomeScreen}
+        <Tab.Screen name = "Horarios" component = {Horarios}
           options={({ route }) => ( {
-          tabBarLabel: false,  
           headerTitleAlign: 'center',
+          tabBarShowLabel: false,
           backgroundColor: SECONDcolor,
           headerStyle: {
           backgroundColor: color, // Cambia el color de fondo del encabezado
@@ -103,14 +108,14 @@ const AppNavigator = () => {
           headerTintColor: 'white',
           tabBarLabel: '',
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "book-open-page-variant-outline" color={'#1C74AA'} size={tamaño} />       
+            <MaterialCommunityIcons name = "book-open-page-variant-outline" color = {'white'} size = {tamaño} />       
           ),
         })}/>
 
-        <Tab.Screen name = "Blog" component={HomeScreen}
+        <Tab.Screen name = "Blog" component = {BlogScreen}
           options={({ route }) => ( {
-          tabBarLabel: false,
           headerTitleAlign: 'center',
+          tabBarShowLabel: false,
           backgroundColor: SECONDcolor,
           headerStyle: {
           backgroundColor: color, // Cambia el color de fondo del encabezado
@@ -118,14 +123,14 @@ const AppNavigator = () => {
           headerTintColor: 'white',
           tabBarLabel: '',
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "account-group" color={'#1C74AA'} size={tamaño} />       
+            <MaterialCommunityIcons name = "account-group" color = {'white'} size = {tamaño} />       
           ),
         })}/>
 
-        <Tab.Screen name = "Recursos" component={HomeScreen}
+        <Tab.Screen name = "Recursos" component = {RecursosScreen}
           options={({ route }) => ( {
-          tabBarLabel: false, 
           headerTitleAlign: 'center',
+          tabBarShowLabel: false,
           backgroundColor: SECONDcolor,
           headerStyle: {
           backgroundColor: color, // Cambia el color de fondo del encabezado
@@ -133,7 +138,22 @@ const AppNavigator = () => {
           headerTintColor: 'white',
           tabBarLabel: '',
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "bookshelf" color={'#1C74AA'} size={tamaño} />       
+            <MaterialCommunityIcons name = "bookshelf" color = {'white'} size = {tamaño} />       
+          ),
+        })}/>
+
+        <Tab.Screen name = "ChatBot" component = {Chatbot}
+          options={({ route }) => ( {
+          headerTitleAlign: 'center',
+          tabBarShowLabel: false,
+          backgroundColor: SECONDcolor,
+          headerStyle: {
+          backgroundColor: color, // Cambia el color de fondo del encabezado
+          },
+          headerTintColor: 'white',
+          tabBarLabel: '',
+          tabBarIcon: ({ focused, color, size }) => (
+            <MaterialCommunityIcons name = "robot-outline" color = {'white'} size = {tamaño} />       
           ),
         })}/>
 
