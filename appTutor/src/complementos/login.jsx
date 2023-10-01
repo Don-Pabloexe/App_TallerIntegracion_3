@@ -52,15 +52,16 @@ const LoginScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: 'center',
+    textAlign: 'center',
+    alignItems: 'center',
     flex: 1,
     padding: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white', // Color de fondo del contenedor
-    
+    backgroundColor: 'white',
   },
 
   label: {
+    textAlign: 'center',
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
@@ -83,17 +84,16 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingHorizontal: 8,
     width: 280,
-    height: 30
+    height: 30,
+    textAlign: 'center',
+    alignItems: 'center',
   },
    
   button: {
-    borderRadius:5,
-    width: 100,
-    height: 25,
-    justifyContent: "center",
-    alignItems:"center",
+    borderRadius: 10,
     backgroundColor: '#258FD0',
-    
+    marginHorizontal: 90,
+    padding: 10
   },
 });
 export default LoginScreen;
