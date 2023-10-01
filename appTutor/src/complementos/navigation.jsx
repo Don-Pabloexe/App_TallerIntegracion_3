@@ -51,7 +51,7 @@ const Acceder = () => {
 const AppNavigator = () => {
   return (
     
-      <Tab.Navigator initialRouteName = "Home" screenOptions = {{tabBarStyle: {position: 'absolute', height: 75, backgroundColor: color}}}>   
+      <Tab.Navigator initialRouteName = "Home" screenOptions = {{tabBarStyle: {height: 75, backgroundColor: color}}}>   
         <Tab.Screen name = "Home" component = {HomeScreen}
           options={({ route }) => ( {
           headerTitleAlign: 'center',
