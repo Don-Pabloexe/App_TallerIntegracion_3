@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import { getDocs, query, where, collection } from 'firebase/firestore';
 import { db } from './firebaseConfig';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const RecursosScreen = () => {
   const [recursos, setRecursos] = useState([]); // Para almacenar los datos de Firestore
@@ -49,18 +50,24 @@ const RecursosScreen = () => {
         renderItem = {({ item }) => (
 
       <View style={styles.item}>
+        
+        <View style = {{ flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+          <MaterialCommunityIcons style = {{margin: 8}} name = "table-chair" color = "#1C74AA" size = {25} />
+          <Text style = {styles.titulo}>Nombre:</Text>
+          <Text>{item.nombre}</Text>
+        </View>
 
-        <Text style = {{flex: 1}}>
-          <Text style={styles.titulo}>Nombre:{'\n'}</Text> {item.nombre}
-        </Text>
+        <View style = {{ flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+          <MaterialCommunityIcons style = {{margin: 8}} name = "office-building" color = "#1C74AA" size = {25} />
+          <Text style = {styles.titulo}>Edificio:</Text>
+          <Text>{item.edificio}</Text>
+        </View>
 
-        <Text style = {{flex: 1}}>
-          <Text style={styles.titulo}>Edificio:{'\n'}</Text> {item.edificio}
-        </Text>
-
-        <Text style = {{flex: 1}}>
-          <Text style = {styles.titulo}>Piso:{'\n'}</Text> {item.piso}
-        </Text>
+        <View style = {{ flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+          <MaterialCommunityIcons style = {{margin: 8}} name = "stairs-up" color = "#1C74AA" size = {25} />
+          <Text style = {styles.titulo}>Piso:</Text>
+          <Text>{item.piso}</Text>
+        </View>
 
       </View>
 
@@ -100,10 +107,10 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#1C74AA',
     borderRadius: 8,
-    width: '13%',
-    height: '6%',
+    width: 70,
+    height: 35,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
@@ -117,13 +124,13 @@ const styles = StyleSheet.create({
   },
 
   item: {
-    padding: '2%',
+    padding: '3%',
     marginBottom: '2%',
     width: '100%',
     backgroundColor: '#c5dceb',
     flexDirection: 'row',
     borderColor: 'black',
-    textAlign: 'center'
+    textAlign: 'center',
   },
 
 });
