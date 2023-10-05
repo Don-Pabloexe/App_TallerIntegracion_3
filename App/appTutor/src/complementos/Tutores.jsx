@@ -12,10 +12,10 @@ import {
 import { addDoc, collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { firebaseConfig2 } from './firebaseConfig2';
+import { firebaseConfig } from './firebaseConfig';
 
-const app2 = initializeApp(firebaseConfig2,'tutores');
-const db2 = getFirestore(app2);
+const app = initializeApp(firebaseConfig,'tutores');
+const db = getFirestore(app);
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -24,7 +24,7 @@ const ChatScreen = () => {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      query(collection(db2, 'messages'), orderBy('timestamp', 'asc')), // Mensajes en orden ascendente
+      query(collection(db, 'messages'), orderBy('timestamp', 'asc')), // Mensajes en orden ascendente
       (snapshot) => {
         const fetchedMessages = snapshot.docs.map((doc) => ({
           ...doc.data(),
@@ -40,7 +40,7 @@ const ChatScreen = () => {
   const sendMessage = async () => {
     if (newMessage.trim() !== '') {
       try {
-        await addDoc(collection(db2, 'messages'), {
+        await addDoc(collection(db, 'messages'), {
           text: newMessage,
           username,
           timestamp: new Date(),
