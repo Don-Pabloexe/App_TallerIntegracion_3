@@ -2,14 +2,7 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import { getDocs, query, where, collection } from 'firebase/firestore';
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { firebaseConfig } from './firebaseConfig';
-
-const app = initializeApp(firebaseConfig,'salas');
-const db = getFirestore(app);
-
-
+import { db } from './firebaseConfig';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const RecursosScreen = () => {
