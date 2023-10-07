@@ -3,14 +3,16 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   FlatList,
   StyleSheet,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { addDoc, collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { db } from './firebaseConfig';
+
+
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -18,37 +20,32 @@ const ChatScreen = () => {
   const [username, setUsername] = useState('Usuario Anónimo');
 
   useEffect(() => {
-    // Carga los mensajes almacenados en AsyncStorage cuando el componente se monta
-    loadMessages();
+    const unsubscribe = onSnapshot(
+      query(collection(db, 'messages'), orderBy('timestamp', 'asc')), // Mensajes en orden ascendente
+      (snapshot) => {
+        const fetchedMessages = snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setMessages(fetchedMessages);
+      }
+    );
+
+    return () => unsubscribe();
   }, []);
 
-  // Función para cargar mensajes almacenados en AsyncStorage
-  const loadMessages = async () => {
-    try {
-      const storedMessages = await AsyncStorage.getItem('chatMessages');
-      if (storedMessages) {
-        setMessages(JSON.parse(storedMessages));
-      }
-    } catch (error) {
-      console.error('Error loading messages:', error);
-    }
-  };
-
-  // Función para guardar mensajes en AsyncStorage y actualizar el estado
-  const saveMessages = async (messagesToSave) => {
-    try {
-      await AsyncStorage.setItem('chatMessages', JSON.stringify(messagesToSave));
-      setMessages(messagesToSave);
-    } catch (error) {
-      console.error('Error saving messages:', error);
-    }
-  };
-
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (newMessage.trim() !== '') {
-      const updatedMessages = [...messages, { text: newMessage, username }];
-      saveMessages(updatedMessages);
-      setNewMessage('');
+      try {
+        await addDoc(collection(db, 'messages'), {
+          text: newMessage,
+          username,
+          timestamp: new Date(),
+        });
+        setNewMessage('');
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
     }
   };
 
@@ -61,16 +58,11 @@ const ChatScreen = () => {
       <FlatList
         data={messages}
         renderItem={({ item }) => (
-          <View
-            style={[
-              styles.messageContainer,
-              username === item.username ? styles.myMessage : styles.otherMessage,
-            ]}
-          >
-            <Text style={styles.messageText}>{item.text}</Text>
+          <View style={styles.messageContainer}>
+            <Text style={styles.messageText}>{item.username}: {item.text}</Text>
           </View>
         )}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item) => item.id}
         contentContainerStyle={styles.messagesList}
       />
       <View style={styles.inputContainer}>
@@ -109,14 +101,6 @@ const styles = StyleSheet.create({
     padding: 8,
     marginBottom: 8,
     maxWidth: '80%',
-  },
-  myMessage: {
-    alignSelf: 'flex-end',
-    backgroundColor: '#007AFF',
-    color: 'white',
-  },
-  otherMessage: {
-    alignSelf: 'flex-start',
   },
   messageText: {
     fontSize: 16,

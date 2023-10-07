@@ -11,6 +11,7 @@ const RecursosScreen = () => {
   const [searched, setSearched] = useState(false); // Para rastrear si se ha realizado una búsqueda
 
   const fetchRecursosData = async () => {
+    
     try {
       const recursosCollectionRef = collection(db, 'salas');
       const recursosQuery = query(recursosCollectionRef, where('nombre', '>=', searchQuery), where('nombre', '<=', searchQuery + '\uf8ff'));
