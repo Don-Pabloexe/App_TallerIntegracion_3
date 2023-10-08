@@ -1,15 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Modal, TextInput } from 'react-native';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { View, Text, FlatList, StyleSheet, TextInput } from 'react-native';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const RecursosScreen = () => {
   const [recursos, setRecursos] = useState([]); // Para almacenar los datos de Firestore
   const [searchQuery, setSearchQuery] = useState(''); // Para el valor de búsqueda
-  const [selectedResource, setSelectedResource] = useState(null); // Para el recurso seleccionado
-  const [filteredRecursos, setFilteredRecursos] = useState([]); // Para almacenar los recursos filtrados
 
   useEffect(() => {
     const fetchRecursosData = async () => {

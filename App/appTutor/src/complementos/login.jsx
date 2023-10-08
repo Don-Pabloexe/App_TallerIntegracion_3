@@ -88,7 +88,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
-
   },
 
   image: {
@@ -100,10 +99,10 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     height: 40,
-    borderColor: '#075fb0', // Color del borde
+    borderColor: '#258FD0', // Color del borde
     backgroundColor: 'white',
-    borderWidth: 2,
-    borderRadius: 5,
+    borderWidth: 1,
+    borderRadius: 40,
     marginBottom: 16,
     paddingHorizontal: 8,
     height: 30,
@@ -117,7 +116,7 @@ const styles = StyleSheet.create({
   },
    
   button: {
-    borderRadius: 10,
+    borderRadius: 40,
     backgroundColor: '#258FD0',
     marginHorizontal: '4%',
     padding: 10,
