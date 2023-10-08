@@ -1,50 +1,74 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, ActivityIndicator } from 'react-native';
+import { firebase_AUTH } from './firebaseConfig';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
 const image = require('./../img/logo_uct.png')
 
-const LoginScreen = ({ navigation }) => {
-  
-  const [username, setUsername] = useState('');
+const LoginScreen = ( {navigation} ) => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState (false);
+  const auth = firebase_AUTH;
 
-  const handleLogin = async () => {
-    //autenticacion logica
+  const signIn = async () => {
+    setLoading (true);
+
     try {
-      if(username == "arias" && password == "contra"){
-        navigation.navigate('accesoexitoso');
-      }//si la autenticacion es exitosa redirige al Home
-      
-    } catch (error) {
-      console.error('Error de inicio de sesión:', error);
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      console.log (response);
+      navigation.navigate('accesoexitoso');
+
+      } catch (error) {
+      console.log(error);
+      alert('Datos de inicio de sesion incorrectos');
+
+      } finally {
+      setLoading (false);
+      }
+
+  }
+
+  const signUp = async () => {
+    setLoading (true);
+    try {
+      const response = await createUserWithEmailAndPassword(auth, email, password);
+      console.log (response);
+      alert('Se inicio correctamente');
+
+      } catch (error) {
+      console.log(error);
+      alert('El email que intenta registrar ya se encuentra en uso');
+
+      } finally {
+      setLoading (false);
+      }
     }
-  };
 
   return (
 
-    <View style={styles.container}>
+    <View style = {styles.container}>
     <ImageBackground source={image} resizeMode = "stretch" style = {styles.image}>
+
       <Text style={styles.label}>Nombre de usuario:</Text>
-      <TextInput
-        value={username}
-        onChangeText={setUsername}
-        placeholder=""
-        style={styles.input}
-      />
+      <TextInput value = {email} style = {styles.input} placeholder = "Email" autoCapitalize="none" onChangeText={(text) => setEmail(text)}/>
+
       <Text style={styles.label}>Contraseña:</Text>
-      <TextInput
-        value={password}
-        onChangeText={setPassword}
-        placeholder=""
-        secureTextEntry
-        style={styles.input}
-      />
-       <TouchableOpacity
-        style={[styles.button]}
-        onPress={handleLogin}
-      >
-        <Text style={[styles.buttonText, { color: 'white' }]}>Iniciar sesión</Text>
+      <TextInput secureTextEntry = {true} value = {password} style = {styles.input} placeholder = "Contraseña" autoCapitalize = "none" onChangeText = {(text) => setPassword(text)}/>
+
+    { loading ? (
+
+    <ActivityIndicator size = "large" color = "#000ff" />
+
+    ): (
+      <>
+      <TouchableOpacity style = {[styles.buttonSec]}>
+        <Text onPress = {signIn} style = {[styles.button]}>Iniciar sesión</Text>
+        <Text onPress = {signUp} style = {[styles.button]}>Registrarse</Text>
       </TouchableOpacity>
+      </>
+    )}
+
     </ImageBackground>
     </View>
   );
@@ -52,16 +76,15 @@ const LoginScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    textAlign: 'center',
-    alignItems: 'center',
     flex: 1,
-    padding: 0,
-    backgroundColor: 'white',
+    justifyContent: 'center',
+    backgroundColor: 'white'
   },
 
   label: {
+    justifyContent: 'center',
     textAlign: 'center',
+    alignItems: 'center',
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
@@ -70,8 +93,8 @@ const styles = StyleSheet.create({
 
   image: {
     justifyContent: 'center',
-    paddingHorizontal: 30,
-    paddingVertical: 80,
+    paddingHorizontal: '12%',
+    paddingVertical: '23%',
   },
 
   input: {
@@ -83,17 +106,25 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 16,
     paddingHorizontal: 8,
-    width: 280,
     height: 30,
-    textAlign: 'center',
-    alignItems: 'center',
+    textAlign: 'center'
+  },
+
+  buttonSec: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+
   },
    
   button: {
     borderRadius: 10,
     backgroundColor: '#258FD0',
-    marginHorizontal: 90,
-    padding: 10
+    marginHorizontal: '4%',
+    padding: 10,
+    color: 'white',
+    flexDirection: 'row',
   },
+
 });
+
 export default LoginScreen;

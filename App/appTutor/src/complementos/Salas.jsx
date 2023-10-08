@@ -1,49 +1,63 @@
 
-import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
-import { getDocs, query, where, collection } from 'firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Modal, TextInput } from 'react-native';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const RecursosScreen = () => {
   const [recursos, setRecursos] = useState([]); // Para almacenar los datos de Firestore
   const [searchQuery, setSearchQuery] = useState(''); // Para el valor de búsqueda
-  const [searched, setSearched] = useState(false); // Para rastrear si se ha realizado una búsqueda
+  const [selectedResource, setSelectedResource] = useState(null); // Para el recurso seleccionado
+  const [filteredRecursos, setFilteredRecursos] = useState([]); // Para almacenar los recursos filtrados
 
-  const fetchRecursosData = async () => {
-    
-    try {
-      const recursosCollectionRef = collection(db, 'salas');
-      const recursosQuery = query(recursosCollectionRef, where('nombre', '>=', searchQuery), where('nombre', '<=', searchQuery + '\uf8ff'));
+  useEffect(() => {
+    const fetchRecursosData = async () => {
+      try {
+        const recursosCollectionRef = collection(db, 'salas');
+        const recursosQuery = query(
+          recursosCollectionRef,
+          where('nombre', '>=', searchQuery),
+          where('nombre', '<=', searchQuery + '\uf8ff')
+        );
 
-      const querySnapshot = await getDocs(recursosQuery);
+        const querySnapshot = await getDocs(recursosQuery);
 
-      const recursosData = [];
+        const recursosData = [];
 
-      querySnapshot.forEach((doc) => {
-        const data = {
-          id: doc.id,
-          ...doc.data(),
-        };
-        recursosData.push(data);
-      });
+        querySnapshot.forEach((doc) => {
+          const data = {
+            id: doc.id,
+            ...doc.data(),
+          };
+          recursosData.push(data);
+        });
 
-      // Actualiza el estado de tu componente con estos datos y marca que se ha realizado una búsqueda
-      setRecursos(recursosData);
-      setSearched(true);
-    } catch (error) {
-      console.error('Error al obtener datos:', error);
-    }
+        setRecursos(recursosData);
+      } catch (error) {
+        console.error('Error al obtener datos:', error);
+      }
+    };
+
+    fetchRecursosData();
+  }, [searchQuery]);
+
+  // Función para abrir los detalles del recurso
+  const openResourceDetails = (resource) => {
+    setSelectedResource(resource);
   };
+
+  // Función para cerrar los detalles del recurso
+  const closeResourceDetails = () => {
+    setSelectedResource(null);
+  };
+
   
   return (
 
     <View style = {styles.container}>
       <Text style = {styles.title}>Buscador de Salas</Text>
-      <TextInput style = {styles.searchInput} placeholder = 'CPJ07_220..' onChangeText = {(text) => setSearchQuery(text)} />
-      <TouchableOpacity style={styles.button} onPress={fetchRecursosData}>
-        <Text style={styles.buttonText}>Buscar</Text>
-      </TouchableOpacity>
+      <TextInput value = {searchQuery} style = {styles.searchInput} placeholder = "Buscar salas..." onChangeText = {(text) => setSearchQuery(text)} />
       
       <FlatList
         data = {recursos}
@@ -81,6 +95,7 @@ const RecursosScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    textAlign: 'center'
   },
 
   title: {
@@ -105,6 +120,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     width: '80%',
     alignSelf: 'center',
+    textAlign: 'center'
   },
 
   button: {

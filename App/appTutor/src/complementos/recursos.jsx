@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     width: '80%',
     alignSelf: 'center',
+    textAlign: 'center'
   },
 
   resourceItem: {
