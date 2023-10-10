@@ -50,10 +50,10 @@ const LoginScreen = ( {navigation} ) => {
     <View style = {styles.container}>
     <ImageBackground source={image} resizeMode = "stretch" style = {styles.image}>
 
-      <Text style={styles.label}>Nombre de usuario:</Text>
-      <TextInput value = {email} style = {styles.input} placeholder = "Email" autoCapitalize="none" onChangeText={(text) => setEmail(text)}/>
+      <Text style = {styles.label}>Nombre de usuario:</Text>
+      <TextInput value = {email} style = {styles.input} placeholder = "Email" autoCapitalize = "none" onChangeText={(text) => setEmail(text)}/>
 
-      <Text style={styles.label}>Contraseña:</Text>
+      <Text style = {styles.label}>Contraseña:</Text>
       <TextInput secureTextEntry = {true} value = {password} style = {styles.input} placeholder = "Contraseña" autoCapitalize = "none" onChangeText = {(text) => setPassword(text)}/>
 
     { loading ? (
@@ -77,35 +77,37 @@ const LoginScreen = ( {navigation} ) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 0,
     justifyContent: 'center',
-    backgroundColor: 'white'
+    alignItems: 'center',
+    backgroundColor: 'white', // Color de fondo del contenedor
+    
   },
 
   label: {
-    justifyContent: 'center',
-    textAlign: 'center',
-    alignItems: 'center',
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
+    alignContent: 'center',
+    textAlign: 'center'
   },
 
   image: {
     justifyContent: 'center',
-    paddingHorizontal: '12%',
-    paddingVertical: '23%',
+    paddingHorizontal: 30,
+    paddingVertical: 80,
   },
 
   input: {
-    width: '100%',
-    height: 40,
     borderColor: '#258FD0', // Color del borde
     backgroundColor: 'white',
     borderWidth: 1,
     borderRadius: 40,
     marginBottom: 16,
     paddingHorizontal: 8,
+    width: 280,
     height: 30,
+    alignContent: 'center',
     textAlign: 'center'
   },
 
