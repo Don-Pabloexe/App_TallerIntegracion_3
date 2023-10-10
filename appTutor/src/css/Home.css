@@ -1,15 +1,17 @@
-#conj{
+#conj {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 60vh;
+    margin: 20%;
 }
-#titleHOME{
+
+#titleHOME {
     text-align: center; 
     
-
 }
-#sala{
+
+#sala {
     background-image:url(/src/img/18625.png);
     background-size: 50%;
     background-repeat:no-repeat;
@@ -18,29 +20,34 @@
     background-position:center;
     
 }
-#salass{
+
+#salass {
     background: none;
     border: none;
     padding: 0;
     cursor: pointer;
     width: 100%;
     height: 100%;
-  }
-  #room{
+}
+
+#room {
     display: inline-block;
     position: relative;
-  }
+}
+
   #invisible{
-    position: absolute;
+    position: relative;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     opacity: 0;
     cursor: pointer;
-  }
+}
+
   #chatbot{
     position: absolute;
     top: 40%;
     right: 5%;
+    height: 100%;
   }
