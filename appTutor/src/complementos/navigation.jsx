@@ -13,6 +13,7 @@ import { Image, View, Text, StyleSheet, ImageBackground } from 'react-native';
 import LoginScreen from './login';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {barratop} from './../css/navigation'
+import Nuevo from './Nuevo';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -149,6 +150,22 @@ const AppNavigator = () => {
         })}/>
 
         <Tab.Screen name = "ChatBot" component = {Chatbot}
+          options={({ route }) => ( {
+          headerTitleAlign: 'center',
+          tabBarShowLabel: false,
+          backgroundColor: SECONDcolor,
+          headerStyle: {
+          backgroundColor: color, // Cambia el color de fondo del encabezado
+          },
+          headerTintColor: 'white',
+          tabBarLabel: '',
+          tabBarActiveBackgroundColor: '#3690c7',
+          tabBarIcon: ({ focused, color, size }) => (
+            <MaterialCommunityIcons name = "robot-outline" color = {'white'} size = {tamaño} />       
+          ),
+        })}/>
+
+<Tab.Screen name = "Nuevo" component = {Nuevo}
           options={({ route }) => ( {
           headerTitleAlign: 'center',
           tabBarShowLabel: false,
