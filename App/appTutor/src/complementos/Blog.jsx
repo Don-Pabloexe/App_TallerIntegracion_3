@@ -1,201 +1,186 @@
 import React, { useState, useEffect } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
-  StyleSheet,
+  View, Text, TextInput, FlatList, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform
 } from 'react-native';
+import { addDoc, collection, onSnapshot, query, orderBy, doc, updateDoc } from 'firebase/firestore';
+import { db } from './firebaseConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const BlogScreen = () => {
-  const [posts, setPosts] = useState([]);
-  const [newPost, setNewPost] = useState('');
+const ChatScreen = () => {
+  const [articles, setArticles] = useState([]);
+  const [newArticle, setNewArticle] = useState('');
+  const [selectedArticleId, setSelectedArticleId] = useState(null);
   const [comments, setComments] = useState({});
-  const [votes, setVotes] = useState({});
-  const [commentText, setCommentText] = useState('');
-  const [currentPostId, setCurrentPostId] = useState(null);
-  const [likes, setLikes] = useState({});
-  const [dislikes, setDislikes] = useState({});
+  const [newComment, setNewComment] = useState('');
+  const [username, setUsername] = useState('Usuario Anónimo');
+
+  const fetchCommentsForArticle = async (articleId) => {
+    const unsubscribeComments = onSnapshot(
+      query(collection(doc(db, 'articles', articleId), 'comments'), orderBy('timestamp', 'asc')),
+      (snapshot) => {
+        const fetchedComments = snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setComments((prevComments) => ({
+          ...prevComments,
+          [articleId]: fetchedComments,
+        }));
+      }
+    );
+
+    return unsubscribeComments;
+  };
 
   useEffect(() => {
-    loadBlogData();
+    const fetchUsername = async () => {
+      const storedEmail = await AsyncStorage.getItem('userEmail');
+      if (storedEmail) {
+        const usernamePart = storedEmail.split('@')[0];
+        setUsername(usernamePart);
+      }
+    };
+
+    fetchUsername();
+
+    const unsubscribe = onSnapshot(
+      query(collection(db, 'articles'), orderBy('timestamp', 'asc')),
+      async (snapshot) => {
+        const fetchedArticles = snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setArticles(fetchedArticles);
+
+        // Load comments for all articles
+        for (let article of fetchedArticles) {
+          await fetchCommentsForArticle(article.id);
+        }
+      }
+    );
+
+    return () => unsubscribe();
   }, []);
 
-  const loadBlogData = async () => {
-    try {
-      const storedPosts = await AsyncStorage.getItem('blogPosts');
-      const storedComments = await AsyncStorage.getItem('blogComments');
-      const storedVotes = await AsyncStorage.getItem('blogVotes');
-      const storedLikes = await AsyncStorage.getItem('blogLikes');
-      const storedDislikes = await AsyncStorage.getItem('blogDislikes');
-
-      if (storedPosts) {
-        setPosts(JSON.parse(storedPosts));
-      }
-
-      if (storedComments) {
-        setComments(JSON.parse(storedComments));
-      }
-
-      if (storedVotes) {
-        setVotes(JSON.parse(storedVotes));
-      }
-
-      if (storedLikes) {
-        setLikes(JSON.parse(storedLikes));
-      }
-
-      if (storedDislikes) {
-        setDislikes(JSON.parse(storedDislikes));
-      }
-    } catch (error) {
-      console.error('Error loading data:', error);
+  useEffect(() => {
+    if (selectedArticleId) {
+      return fetchCommentsForArticle(selectedArticleId);
     }
+  }, [selectedArticleId]);
+
+  const handleLike = async (article) => {
+    const articleRef = doc(db, 'articles', article.id);
+
+    if (article.likedBy && article.likedBy.includes(username)) {
+      article.likes -= 1;
+      const index = article.likedBy.indexOf(username);
+      article.likedBy.splice(index, 1);
+    } else {
+      article.likes = (article.likes || 0) + 1;
+      if (!article.likedBy) {
+        article.likedBy = [];
+      }
+      article.likedBy.push(username);
+    }
+
+    await updateDoc(articleRef, {
+      likes: article.likes,
+      likedBy: article.likedBy,
+    });
   };
 
-  const handleAddPost = async () => {
-    if (newPost.trim() !== '') {
-      const postId = Date.now().toString();
-      const newPosts = [...posts, { id: postId, text: newPost }];
-      setPosts(newPosts);
-      setNewPost('');
-
+  const sendArticle = async () => {
+    if (newArticle.trim() !== '') {
       try {
-        await AsyncStorage.setItem('blogPosts', JSON.stringify(newPosts));
+        await addDoc(collection(db, 'articles'), {
+          text: newArticle,
+          username,
+          timestamp: new Date(),
+          likes: 0,
+          likedBy: [],
+        });
+        setNewArticle('');
       } catch (error) {
-        console.error('Error saving data:', error);
-      }
-    }
-  };
-
-  const handleAddComment = async (postId) => {
-    if (commentText.trim() !== '') {
-      const newComment = commentText;
-
-      if (!comments[postId]) {
-        comments[postId] = [];
-      }
-
-      comments[postId].push(newComment);
-
-      setComments({ ...comments });
-      setCommentText('');
-
-      try {
-        await AsyncStorage.setItem('blogComments', JSON.stringify(comments));
-      } catch (error) {
-        console.error('Error saving data:', error);
+        console.error('Error sending article:', error);
       }
     }
   };
 
-  const handleVote = async (postId, voteType) => {
-    const userVoted = votes[postId];
-
-    if (!userVoted) {
-      votes[postId] = voteType;
-
-      if (voteType === 'like') {
-        if (!likes[postId]) {
-          likes[postId] = 0;
-        }
-        likes[postId]++;
-      } else {
-        if (!dislikes[postId]) {
-          dislikes[postId] = 0;
-        }
-        dislikes[postId]++;
-      }
-
-      setVotes({ ...votes });
-      setLikes({ ...likes });
-      setDislikes({ ...dislikes });
-
+  const sendComment = async () => {
+    if (selectedArticleId && newComment.trim() !== '') {
       try {
-        await AsyncStorage.setItem('blogVotes', JSON.stringify(votes));
-        await AsyncStorage.setItem('blogLikes', JSON.stringify(likes));
-        await AsyncStorage.setItem('blogDislikes', JSON.stringify(dislikes));
+        await addDoc(collection(doc(db, 'articles', selectedArticleId), 'comments'), {
+          text: newComment,
+          username,
+          timestamp: new Date(),
+        });
+        setNewComment('');
       } catch (error) {
-        console.error('Error saving data:', error);
+        console.error('Error sending comment:', error);
       }
     }
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Text style={styles.title}>Blog Educativo</Text>
       <TextInput
         style={styles.input}
-        placeholder="Escribe tu artículo"
-        value={newPost}
-        onChangeText={(text) => setNewPost(text)}
+        placeholder="Escribe un articulo"
+        value={newArticle}
+        onChangeText={setNewArticle}
       />
-      <TouchableOpacity style={styles.button} onPress={handleAddPost}>
-        <Text style={styles.buttonText}>Publicar</Text>
+      <TouchableOpacity style={styles.sendButton} onPress={sendArticle}>
+        <Text style={styles.sendButtonText}>Enviar Articulo</Text>
       </TouchableOpacity>
       <FlatList
-        data={posts}
-        keyExtractor={(item) => item.id}
+        data={articles}
         renderItem={({ item }) => (
-          <View style={styles.postContainer}>
-            <Text style={styles.postText}>{item.text}</Text>
-            <TouchableOpacity
-              style={[
-                styles.voteButton,
-                votes[item.id] && styles.disabledVoteButton,
-              ]}
-              onPress={() => handleVote(item.id, 'like')}
-              disabled={votes[item.id]}
-            >
-              <Text style={styles.voteButtonText}>Like</Text>
-              <Text style={styles.voteCount}>{likes[item.id] || 0}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.voteButton,
-                votes[item.id] && styles.disabledVoteButton,
-              ]}
-              onPress={() => handleVote(item.id, 'dislike')}
-              disabled={votes[item.id]}
-            >
-              <Text style={styles.voteButtonText}>Dislike</Text>
-              <Text style={styles.voteCount}>{dislikes[item.id] || 0}</Text>
-            </TouchableOpacity>
-            <TextInput
-              style={styles.commentInput}
-              placeholder="Añade un comentario"
-              value={commentText}
-              onChangeText={(text) => setCommentText(text)}
-            />
-            <TouchableOpacity
-              style={styles.commentButton}
-              onPress={() => handleAddComment(item.id)}
-            >
-              <Text style={styles.commentButtonText}>Comentar</Text>
+          <View style={styles.articleContainer}>
+            <Text style={styles.articleText}>{item.username}: {item.text}</Text>
+            <Text>{item.likes || 0} Me gusta</Text>
+            <TouchableOpacity onPress={() => handleLike(item)}>
+              <Text style={styles.likeButton}>👍 Me gusta</Text>
             </TouchableOpacity>
             <FlatList
               data={comments[item.id] || []}
-              keyExtractor={(comment) => comment}
+              keyExtractor={(comment, index) => index.toString()}
               renderItem={({ item: comment }) => (
                 <View style={styles.commentContainer}>
-                  <Text style={styles.commentText}>{comment}</Text>
+                  <Text style={styles.commentText}>
+                    {comment.username}: {comment.text}
+                  </Text>
                 </View>
               )}
             />
+            <TextInput
+              style={styles.input}
+              placeholder="Haz un comentario..."
+              value={newComment}
+              onChangeText={setNewComment}
+            />
+            <TouchableOpacity
+              style={styles.sendButton}
+              onPress={() => {
+                setSelectedArticleId(item.id);
+                sendComment();
+              }}
+            >
+              <Text style={styles.sendButtonText}>Comentar</Text>
+            </TouchableOpacity>
           </View>
         )}
+        keyExtractor={(item) => item.id}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: '#F0F0F0',
+    padding: 16,
   },
   title: {
     fontSize: 24,
@@ -205,72 +190,47 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#007AFF',
     borderRadius: 8,
-    padding: 8,
-    marginBottom: 8,
-  },
-  button: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    padding: 8,
-    alignSelf: 'flex-end',
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  postContainer: {
-    backgroundColor: '#E3E3E3',
-    borderRadius: 8,
-    padding: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     marginBottom: 16,
   },
-  postText: {
-    fontSize: 16,
-  },
-  voteButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  disabledVoteButton: {
-    backgroundColor: '#CCC',
-  },
-  voteButtonText: {
-    color: 'green',
-    marginRight: 8,
-  },
-  voteCount: {
-    fontWeight: 'bold',
-  },
-  commentInput: {
-    borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 8,
-    padding: 8,
-    marginTop: 8,
-  },
-  commentButton: {
+  sendButton: {
     backgroundColor: '#007AFF',
     borderRadius: 8,
-    padding: 8,
-    alignSelf: 'flex-end',
-    marginTop: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    marginBottom: 16,
   },
-  commentButtonText: {
+  sendButtonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  likeButton: {
+    color: '#007AFF',
+    marginVertical: 8,
+  },
+  articleContainer: {
+    backgroundColor: '#E3E3E3',
+    borderRadius: 8,
+    padding: 8,
+    marginBottom: 16,
+  },
+  articleText: {
+    fontSize: 16,
+    color: '#333',
   },
   commentContainer: {
     backgroundColor: '#F0F0F0',
     borderRadius: 8,
     padding: 8,
     marginTop: 8,
+    marginLeft: 16,
   },
   commentText: {
     fontSize: 14,
   },
 });
 
-export default BlogScreen;
+export default ChatScreen;
