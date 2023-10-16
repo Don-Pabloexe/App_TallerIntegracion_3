@@ -4,7 +4,7 @@ import { GiftedChat, Bubble, Send } from 'react-native-gifted-chat';
 import { Dialogflow_V2 } from 'react-native-dialogflow';
 import { dialogflowConfig } from './env';
 import { format } from 'date-fns';
-import { Image } from 'react-native-web';
+import { Image } from 'react-native';
 
 const Botavatar = require('./../img/perro.jpg');
 const Useravatar = require('./../img/avatar.jpg');
@@ -109,7 +109,7 @@ class Chatbot extends Component {
         
         {/* Renderizamos el chat si está abierto */}
       
-          <View style={{flex:1, backgroundColor: '#fcfd96', zIndex:99999, height:'100%',}}>
+          <View style={{flex:1, backgroundColor: '#96eafc', zIndex:99999, height:'100%',}}>
             <GiftedChat
               messages={this.state.messages}
               onSend={(message) => this.onSend(message)}
@@ -123,10 +123,10 @@ class Chatbot extends Component {
                   {...props}
                   wrapperStyle={{
                     left: {
-                      backgroundColor: '#fcfd96', // Color de fondo de los mensajes del bot
+                      backgroundColor: '#ffffa2', // Color de fondo de los mensajes del bot
                     },
                     right: {
-                      backgroundColor: '#9EE7A5', // Color de fondo de los mensajes del usuario
+                      backgroundColor: '#00ffff', // Color de fondo de los mensajes del usuario
                     },
                   }}
                   textStyle={{
@@ -134,36 +134,12 @@ class Chatbot extends Component {
                       color: 'black', // Color del texto de los mensajes del bot
                     },
                     right: {
-                      color: 'white', // Color del texto de los mensajes del usuario
+                      color: 'black', // Color del texto de los mensajes del usuario
                     },
                   }}
                 />
               )}
-              renderMessage={(props) => {
-                const { currentMessage } = props;
-
-                // Comprueba si el mensaje es del usuario actual
-                const isCurrentUser = currentMessage.user._id === 1;
-
-                 return (
-                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: isCurrentUser ? 'flex-end' : 'flex-start' }}>
-                    {!isCurrentUser && ( // Si el mensaje no es del usuario actual, muestra la imagen
-                      <Image
-                        source={currentMessage.user.avatar}
-                        style={{ width: 40, height: 40, borderRadius: 40, marginLeft: 10, marginRight: 5 }}
-                      />
-                    )}
-                    <Bubble {...props} />
-                    {isCurrentUser && ( // Si el mensaje es del usuario actual, muestra la imagen
-                      <Image
-                        source={currentMessage.user.avatar}
-                        style={{ width: 40, height: 40, borderRadius: 40, marginLeft: 5, marginRight: 10 }}
-                      />
-                    )}
-                  </View>
-                );
-              }}
-
+              
               dateFormat={'ll HH:mm'} // Establece el formato de la fecha
               locale={'es'} // Establece el idioma a español
             />
