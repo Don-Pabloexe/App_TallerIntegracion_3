@@ -1,18 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import { View, Text, TextInput, FlatList, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { addDoc, collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -20,8 +11,19 @@ const ChatScreen = () => {
   const [username, setUsername] = useState('Usuario Anónimo');
 
   useEffect(() => {
+    const fetchEmail = async () => {
+        const storedEmail = await AsyncStorage.getItem('userEmail');
+
+        if(storedEmail) {
+            const usernamePart = storedEmail.split('@')[0]; // Toma solo la parte antes del '@'
+            setUsername(usernamePart);
+        }
+    };
+
+    fetchEmail();
+
     const unsubscribe = onSnapshot(
-      query(collection(db, 'messages'), orderBy('timestamp', 'asc')), // Mensajes en orden ascendente
+      query(collection(db, 'messages'), orderBy('timestamp', 'asc')),
       (snapshot) => {
         const fetchedMessages = snapshot.docs.map((doc) => ({
           ...doc.data(),
@@ -39,7 +41,7 @@ const ChatScreen = () => {
       try {
         await addDoc(collection(db, 'messages'), {
           text: newMessage,
-          username,
+          username,  // Nombre de usuario (parte del email antes del '@')
           timestamp: new Date(),
         });
         setNewMessage('');
@@ -50,10 +52,7 @@ const ChatScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Text style={styles.title}>Chat Colaborativo</Text>
       <FlatList
         data={messages}
@@ -81,20 +80,24 @@ const ChatScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  
   container: {
     flex: 1,
     backgroundColor: '#F0F0F0',
   },
+
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginVertical: 16,
     textAlign: 'center',
   },
+
   messagesList: {
     paddingHorizontal: 16,
     paddingBottom: 16,
   },
+
   messageContainer: {
     backgroundColor: '#E3E3E3',
     borderRadius: 8,
@@ -102,10 +105,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     maxWidth: '80%',
   },
+
   messageText: {
     fontSize: 16,
     color: '#333',
   },
+
   inputContainer: {
     flexDirection: 'row',
     paddingHorizontal: 16,
@@ -115,6 +120,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
   },
+
   input: {
     flex: 1,
     borderWidth: 1,
@@ -123,6 +129,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
   },
+
   sendButton: {
     backgroundColor: '#007AFF',
     borderRadius: 8,
@@ -130,6 +137,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginLeft: 8,
   },
+
   sendButtonText: {
     color: 'white',
     fontWeight: 'bold',
