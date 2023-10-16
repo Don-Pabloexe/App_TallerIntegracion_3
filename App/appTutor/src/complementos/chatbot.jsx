@@ -4,14 +4,17 @@ import { GiftedChat, Bubble, Send } from 'react-native-gifted-chat';
 import { Dialogflow_V2 } from 'react-native-dialogflow';
 import { dialogflowConfig } from './env';
 import { format } from 'date-fns';
+import { Image } from 'react-native-web';
 
 const Botavatar = require('./../img/perro.jpg');
+const Useravatar = require('./../img/avatar.jpg');
 
 const BOT = {
   _id: 2,
   name: 'PerritoBot',
   avatar: Botavatar,
 };
+
 
 class Chatbot extends Component {
   state = {
@@ -29,10 +32,9 @@ class Chatbot extends Component {
         user: BOT,
       },
     ],
-    id: 1,
-    name: '',
-    isChatOpen: false, // Agregamos un estado para controlar la apertura y cierre del chat
   };
+
+  
 
   componentDidMount() {
     Dialogflow_V2.setConfiguration(
@@ -88,75 +90,80 @@ class Chatbot extends Component {
     );
   }
 
-  renderBubble(props) {
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          right: {
-            backgroundColor: '#38f5f5', // Color para los mensajes de la persona
-          },
-          left: {
-            backgroundColor: '#E5E5EA', // Color para los mensajes del bot
-          },
-        }}
-      />
-    );
-  }
 
   formatChatDate(date) {
     return format(date, "dd/MM/yyyy HH:mm"); // Cambia el formato según tus preferencias
   }
 
-  renderSend(props) {
-    return (
-      <Send {...props}>
-        <View style={{ marginRight: 10, marginBottom: 5 }}>
-          <Text style={{ color: '#0084FF' }}>Enviar</Text> {/* Cambia el texto aquí */}
-        </View>
-      </Send>
-    );
-  }
+ 
 
-  toggleChat() {
-    this.setState((prevState) => ({
-      isChatOpen: !prevState.isChatOpen,
-    }));
-  }
 
   render() {
-    const { isChatOpen } = this.state;
+   
+    
+  
 
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        {/* Agregamos un botón para abrir/cerrar el chat */}
-        <TouchableOpacity
-          onPress={() => this.toggleChat()}
-          style={{
-            position: 'absolute',
-            bottom: 60,
-            right: 10,
-            backgroundColor: '#0084FF',
-            borderRadius: 30,
-            width: 60,
-            height: 60,
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 999,
-          }}
-        >
-          <Text style={{ color: 'white', fontSize: 20 }}>Chat</Text>
-        </TouchableOpacity>
+    
         
         {/* Renderizamos el chat si está abierto */}
       
-          <View style={{flex:1, backgroundColor: '#FAF3E0', zIndex:99999, height:'100%',}}>
+          <View style={{flex:1, backgroundColor: '#fcfd96', zIndex:99999, height:'100%',}}>
             <GiftedChat
               messages={this.state.messages}
               onSend={(message) => this.onSend(message)}
               onQuickReply={(quickReply) => this.onQuickReply(quickReply)}
-              user={{ _id: 1 }}
-              //renderBubble={this.renderBubble} // Utiliza la función renderBubble
+              user={{
+                _id: 1,
+                avatar: Useravatar, // Agrega la imagen del usuario
+              }}
+              renderBubble={(props) => (
+                <Bubble
+                  {...props}
+                  wrapperStyle={{
+                    left: {
+                      backgroundColor: '#fcfd96', // Color de fondo de los mensajes del bot
+                    },
+                    right: {
+                      backgroundColor: '#9EE7A5', // Color de fondo de los mensajes del usuario
+                    },
+                  }}
+                  textStyle={{
+                    left: {
+                      color: 'black', // Color del texto de los mensajes del bot
+                    },
+                    right: {
+                      color: 'white', // Color del texto de los mensajes del usuario
+                    },
+                  }}
+                />
+              )}
+              renderMessage={(props) => {
+                const { currentMessage } = props;
+
+                // Comprueba si el mensaje es del usuario actual
+                const isCurrentUser = currentMessage.user._id === 1;
+
+                 return (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: isCurrentUser ? 'flex-end' : 'flex-start' }}>
+                    {!isCurrentUser && ( // Si el mensaje no es del usuario actual, muestra la imagen
+                      <Image
+                        source={currentMessage.user.avatar}
+                        style={{ width: 40, height: 40, borderRadius: 40, marginLeft: 10, marginRight: 5 }}
+                      />
+                    )}
+                    <Bubble {...props} />
+                    {isCurrentUser && ( // Si el mensaje es del usuario actual, muestra la imagen
+                      <Image
+                        source={currentMessage.user.avatar}
+                        style={{ width: 40, height: 40, borderRadius: 40, marginLeft: 5, marginRight: 10 }}
+                      />
+                    )}
+                  </View>
+                );
+              }}
+
               dateFormat={'ll HH:mm'} // Establece el formato de la fecha
               locale={'es'} // Establece el idioma a español
             />
@@ -165,5 +172,7 @@ class Chatbot extends Component {
     );
   }
 }
+
+
 
 export default Chatbot;

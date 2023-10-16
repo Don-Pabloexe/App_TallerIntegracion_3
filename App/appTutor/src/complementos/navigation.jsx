@@ -13,6 +13,7 @@ import { Image, View, Text, StyleSheet, ImageBackground } from 'react-native';
 import LoginScreen from './login';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {barratop} from './../css/navigation'
+import Nuevo from './Nuevo';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -62,8 +63,9 @@ const AppNavigator = () => {
           },
           headerTintColor: 'white',
           tabBarLabel: '',
+          tabBarActiveBackgroundColor: '#3690c7',
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "home" color = {'white'} size = {tamaño} />       
+            <MaterialCommunityIcons name = 'home-outline' color = 'white' size = {tamaño} />       
           ),
         })}/>
 
@@ -77,6 +79,7 @@ const AppNavigator = () => {
           },
           headerTintColor: 'white',
           tabBarLabel: '',
+          tabBarActiveBackgroundColor: '#3690c7',
           tabBarIcon: ({ focused, color, size }) => (
             <MaterialCommunityIcons name = "door" color = {'white'} size = {tamaño} />       
           ),
@@ -92,6 +95,7 @@ const AppNavigator = () => {
           },
           headerTintColor: 'white',
           tabBarLabel: '',
+          tabBarActiveBackgroundColor: '#3690c7',
           tabBarIcon: ({ focused, color, size }) => (
             <MaterialCommunityIcons name = "school-outline" color = {'white'} size = {tamaño} />       
           ),
@@ -107,6 +111,7 @@ const AppNavigator = () => {
           },
           headerTintColor: 'white',
           tabBarLabel: '',
+          tabBarActiveBackgroundColor: '#3690c7',
           tabBarIcon: ({ focused, color, size }) => (
             <MaterialCommunityIcons name = "book-open-page-variant-outline" color = {'white'} size = {tamaño} />       
           ),
@@ -122,6 +127,7 @@ const AppNavigator = () => {
           },
           headerTintColor: 'white',
           tabBarLabel: '',
+          tabBarActiveBackgroundColor: '#3690c7',
           tabBarIcon: ({ focused, color, size }) => (
             <MaterialCommunityIcons name = "account-group" color = {'white'} size = {tamaño} />       
           ),
@@ -137,6 +143,7 @@ const AppNavigator = () => {
           },
           headerTintColor: 'white',
           tabBarLabel: '',
+          tabBarActiveBackgroundColor: '#3690c7',
           tabBarIcon: ({ focused, color, size }) => (
             <MaterialCommunityIcons name = "bookshelf" color = {'white'} size = {tamaño} />       
           ),
@@ -152,6 +159,23 @@ const AppNavigator = () => {
           },
           headerTintColor: 'white',
           tabBarLabel: '',
+          tabBarActiveBackgroundColor: '#3690c7',
+          tabBarIcon: ({ focused, color, size }) => (
+            <MaterialCommunityIcons name = "robot-outline" color = {'white'} size = {tamaño} />       
+          ),
+        })}/>
+
+<Tab.Screen name = "Nuevo" component = {Nuevo}
+          options={({ route }) => ( {
+          headerTitleAlign: 'center',
+          tabBarShowLabel: false,
+          backgroundColor: SECONDcolor,
+          headerStyle: {
+          backgroundColor: color, // Cambia el color de fondo del encabezado
+          },
+          headerTintColor: 'white',
+          tabBarLabel: '',
+          tabBarActiveBackgroundColor: '#3690c7',
           tabBarIcon: ({ focused, color, size }) => (
             <MaterialCommunityIcons name = "robot-outline" color = {'white'} size = {tamaño} />       
           ),
