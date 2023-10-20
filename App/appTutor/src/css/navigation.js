@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 const barratop = StyleSheet.create({
 
     backgroundImage: {
-      flex: 1, // Asegura que la imagen ocupe todo el espacio disponible
+      flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
       width: 160,
@@ -12,7 +12,7 @@ const barratop = StyleSheet.create({
     
     container: {
       bottom: 1,
-      padding: 20
+      padding: 20,
     },
     
     text: {

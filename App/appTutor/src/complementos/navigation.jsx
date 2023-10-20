@@ -10,9 +10,12 @@ import RecursosScreen from './recursos';
 import BlogScreen from './Blog';
 import Chatbot from './chatbot';
 import { Image, View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+
 import LoginScreen from './login';
+import AccountDetails from './accountDetails'
+
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {barratop} from './../css/navigation'
+import { barratop } from './../css/navigation'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -32,18 +35,36 @@ const CustomHeader = () => {
   );
 };
 
+const HeaderAccountDetails = () => {
+  return (
+      <View style = {barratop.container2}>
+      </View>
+  );
+};
+
 const Acceder = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
+      
       <Stack.Screen
-        name="Login"
-        component={LoginScreen}
+        name = "Login"
+        component = {LoginScreen}
         options={{
           headerTitle: () => <CustomHeader />,
         }}
       />
-        <Stack.Screen name = "accesoexitoso" component = {AppNavigator} options = {{ headerShown: false }}/>
+
+      <Stack.Screen
+        name = "AccountDetail"
+        component = {AccountDetails}
+        options = {{
+          headerTitle: () => <HeaderAccountDetails />,
+        }}
+      />
+
+      <Stack.Screen name = "accesoexitoso" component = {AppNavigator} options = {{ headerShown: false }}/>
+      
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -55,6 +76,10 @@ const AppNavigator = () => {
 
   const handleGoToLogin = () => {
     navigation.navigate('Login');
+  };
+
+  const handleGoAccountDetail = () => {
+    navigation.navigate('AccountDetail');
   };
 
   const fetchEmail = async () => {
@@ -99,7 +124,7 @@ const AppNavigator = () => {
           ),
 
           headerRight: () => (
-            <TouchableOpacity style = {{marginRight: 25, flexDirection: 'column', alignContent: 'center', alignItems: 'center'}} onPress = {{}}> 
+            <TouchableOpacity style = {{marginRight: 25, flexDirection: 'column', alignContent: 'center', alignItems: 'center'}} onPress = {handleGoAccountDetail}> 
               <MaterialCommunityIcons name = 'account-circle' color = 'white' size = {tamaño} style = {{}}/>  
               <Text style = {styles.label}>{username}</Text>
             </TouchableOpacity> 
