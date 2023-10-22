@@ -4,76 +4,52 @@ import { View, Text, FlatList, StyleSheet, TextInput } from 'react-native';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AccountDetailsScreen = () => {
-  const [recursos, setRecursos] = useState([]); // Para almacenar los datos de Firestore
-  const [searchQuery, setSearchQuery] = useState(''); // Para el valor de búsqueda
+  const [username, setUsername] = useState('Usuario Anónimo');
+  const [email, setEmail] = useState('Correo');
+
+  const handleGoToLogin = () => {
+    navigation.navigate('Login');
+  };
+
+  const handleGoAccountDetail = () => {
+    navigation.navigate('AccountDetail');
+  };
+
+  const fetchEmail = async () => {
+    const storedEmail = await AsyncStorage.getItem('userEmail');
+
+    if (storedEmail) {
+      const usernamePart = storedEmail.split('@')[0]; // Toma solo la parte antes del '@'
+      setUsername(usernamePart);
+    }
+
+    if (storedEmail) {
+      const emailPart = storedEmail; // Toma solo la parte antes del '@'
+      setEmail(emailPart);
+    }
+    
+  };
 
   useEffect(() => {
-    const fetchRecursosData = async () => {
-      try {
-        const recursosCollectionRef = collection(db, 'salas');
-        const recursosQuery = query(
-          recursosCollectionRef,
-          where('nombre', '>=', searchQuery),
-          where('nombre', '<=', searchQuery + '\uf8ff'),
-        );
-
-        const querySnapshot = await getDocs(recursosQuery);
-
-        const recursosData = [];
-
-        querySnapshot.forEach((doc) => {
-          const data = {
-            id: doc.id,
-            ...doc.data(),
-          };
-          recursosData.push(data);
-        });
-
-        setRecursos(recursosData);
-      } catch (error) {
-        console.error('Error al obtener datos:', error);
-      }
-    };
-
-    fetchRecursosData();
-  }, [searchQuery]);
+    fetchEmail();
+  }, []); 
   
   return (
 
     <View style = {styles.container}>
-      <Text style = {styles.title}>Buscador de Salas</Text>
-      <TextInput value = {searchQuery} style = {styles.searchInput} placeholder = "Buscar salas..." onChangeText = {(text) => setSearchQuery(text)} />
+      <MaterialCommunityIcons style = {{marginTop: 60, marginBottom: 10}} name = "account" color = "#1C74AA" size = {100} />
       
-      <FlatList
-        data = {recursos}
-        keyExtractor = {(item) => item.id}
-        renderItem = {({ item }) => (
+      <Text style = {styles.title}>Usuario</Text>
+      <Text style = {styles.content}>{username}</Text>
 
-      <View style={styles.item}>
-        
-        <View style = {{ flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-          <MaterialCommunityIcons style = {{margin: 8}} name = "table-chair" color = "#1C74AA" size = {25} />
-          <Text style = {styles.titulo}>Nombre:</Text>
-          <Text>{item.nombre}</Text>
-        </View>
+      <Text style = {styles.title}>Email</Text>
+      <Text style = {styles.content}>{email}</Text>
 
-        <View style = {{ flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-          <MaterialCommunityIcons style = {{margin: 8}} name = "office-building" color = "#1C74AA" size = {25} />
-          <Text style = {styles.titulo}>Edificio:</Text>
-          <Text>{item.edificio}</Text>
-        </View>
-
-        <View style = {{ flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-          <MaterialCommunityIcons style = {{margin: 8}} name = "stairs-up" color = "#1C74AA" size = {25} />
-          <Text style = {styles.titulo}>Piso:</Text>
-          <Text>{item.piso}</Text>
-        </View>
-
-      </View>
-
-    )}/>
+      <Text style = {styles.title}>Área</Text>
+      <Text style = {styles.content}>Furboaaaaa</Text>
 
     </View>
   );
@@ -86,55 +62,16 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    margin: '4%',
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 4,
     textAlign: 'center',
   },
 
-  titulo: {
-    flex: 1,
-    fontWeight: 'bold'
-  },
-
-  searchInput: {
+  content: {
     fontSize: 16,
-    borderWidth: 1,
-    borderColor: 'black',
-    borderRadius: 8,
-    padding: 8,
-    marginBottom: 16,
-    width: '80%',
-    alignSelf: 'center',
-    textAlign: 'center'
-  },
-
-  button: {
-    backgroundColor: '#1C74AA',
-    borderRadius: 8,
-    width: 70,
-    height: 35,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-    marginBottom: '5%'
-  },
-
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    alignItems: 'center'  
-  },
-
-  item: {
-    padding: '3%',
-    marginBottom: '2%',
-    width: '100%',
-    backgroundColor: '#c5dceb',
-    flexDirection: 'row',
-    borderColor: 'black',
     textAlign: 'center',
+    marginBottom: 16
   },
 
 });

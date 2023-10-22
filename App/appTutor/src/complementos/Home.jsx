@@ -9,7 +9,7 @@ const HomeScreen = ({ navigation }) => {
     <View style={CommonStyles.container }>
       <View style={styles.row}>
         <TouchableOpacity
-          style={HomeStyles.button}
+          style = {HomeStyles.button}
           onPress={() => navigation.navigate('Salas')}
         >
           <Image
@@ -19,8 +19,8 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={HomeStyles.button}
-          onPress={() => navigation.navigate('Tutores')}
+          style = {HomeStyles.button}
+          onPress = {() => navigation.navigate('Tutores')}
         >
           <Image
             style={HomeStyles.image}
