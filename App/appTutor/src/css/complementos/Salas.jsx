@@ -16,7 +16,7 @@ const RecursosScreen = () => {
         const recursosQuery = query(
           recursosCollectionRef,
           where('nombre', '>=', searchQuery),
-          where('nombre', '<=', searchQuery + '\uf8ff')
+          where('nombre', '<=', searchQuery + '\uf8ff'),
         );
 
         const querySnapshot = await getDocs(recursosQuery);
