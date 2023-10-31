@@ -165,7 +165,7 @@ const AppNavigator = () => {
           ),
         })}/>
 
-<Tab.Screen name = "Nuevo" component = {Nuevo}
+<Tab.Screen name = "Talleres" component = {Nuevo}
           options={({ route }) => ( {
           headerTitleAlign: 'center',
           tabBarShowLabel: false,

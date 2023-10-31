@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, ActivityIndicator, Picker } from 'react-native';
 import { firebase_AUTH } from './firebaseConfig';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const image = require('./../img/logo_uct.png');
@@ -10,6 +10,7 @@ const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [selectedRole, setSelectedRole] = useState('docente');
     const auth = firebase_AUTH;
 
     const isUctEmail = (email) => {
@@ -27,8 +28,14 @@ const LoginScreen = ({ navigation }) => {
 
         try {
             const response = await signInWithEmailAndPassword(auth, email, password);
-            await AsyncStorage.setItem('userEmail', email);  // Almacena el email en AsyncStorage
-            navigation.navigate('accesoexitoso');
+
+            // Verifica si el cargo almacenado en el perfil coincide con el cargo seleccionado al registrarse
+            if (response.user.displayName === selectedRole) {
+                await AsyncStorage.setItem('userEmail', email);
+                navigation.navigate('accesoexitoso');
+            } else {
+                alert('No tiene permiso para iniciar sesión con este cargo.');
+            }
         } catch (error) {
             console.log(error);
             alert('Datos de inicio de sesión incorrectos');
@@ -48,7 +55,10 @@ const LoginScreen = ({ navigation }) => {
 
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password);
-            console.log(response);
+
+            // Agrega el campo "role" al perfil del usuario
+            await updateProfile(response.user, { displayName: selectedRole });
+
             alert('Se registró correctamente');
         } catch (error) {
             console.log(error);
@@ -79,6 +89,16 @@ const LoginScreen = ({ navigation }) => {
                     autoCapitalize="none"
                     onChangeText={(text) => setPassword(text)}
                 />
+
+                <Text style={styles.label}>Cargo:</Text>
+                <Picker
+                    selectedValue={selectedRole}
+                    style={styles.picker}
+                    onValueChange={(itemValue, itemIndex) => setSelectedRole(itemValue)}
+                >
+                    <Picker.Item label="Docente" value="docente" />
+                    <Picker.Item label="Asesor" value="asesor" />
+                </Picker>
 
                 {loading ? (
                     <ActivityIndicator size="large" color="#000ff" />
@@ -121,6 +141,15 @@ const styles = StyleSheet.create({
         borderRadius: 40,
         marginBottom: 16,
         paddingHorizontal: 8,
+        height: 40,
+        textAlign: 'center'
+    },
+    picker: {
+        width: '100%',
+        borderColor: '#258FD0',
+        borderWidth: 1,
+        borderRadius: 40,
+        marginBottom: 16,
         height: 40,
         textAlign: 'center'
     },
