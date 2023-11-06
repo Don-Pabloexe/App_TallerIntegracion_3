@@ -6,8 +6,8 @@ import { db } from './firebaseConfig';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const RecursosScreen = () => {
-  const [recursos, setRecursos] = useState([]); // Para almacenar los datos de Firestore
-  const [searchQuery, setSearchQuery] = useState(''); // Para el valor de búsqueda
+  const [recursos, setRecursos] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(''); 
 
   useEffect(() => {
     const fetchRecursosData = async () => {
@@ -40,12 +40,10 @@ const RecursosScreen = () => {
     fetchRecursosData();
   }, [searchQuery]);
 
-  // Función para abrir los detalles del recurso
   const openResourceDetails = (resource) => {
     setSelectedResource(resource);
   };
 
-  // Función para cerrar los detalles del recurso
   const closeResourceDetails = () => {
     setSelectedResource(null);
   };

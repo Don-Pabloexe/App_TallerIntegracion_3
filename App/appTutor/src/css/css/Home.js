@@ -10,7 +10,6 @@ import recursos from './../img/recursos.png';
 const CommonStyles = StyleSheet.create({
 
   container: {
-
     flex: 1,
     alignContent: "center",
     backgroundColor: "#EAEAEA",
@@ -61,9 +60,8 @@ const HomeStyles = StyleSheet.create({
   },
 
   image: {
-    width: '50%',
-    height: '50%',
-  
+    width: 100,
+    height: 100,
   },
 
   info:{

@@ -8,6 +8,7 @@ import {
   Modal,
   TextInput,
 } from 'react-native';
+
 import {
   getFirestore,
   collection,
@@ -18,10 +19,10 @@ import {
 import { db } from './firebaseConfig';
 
 const RecursosScreen = () => {
-  const [recursos, setRecursos] = useState([]); // Para almacenar los datos de Firestore
-  const [searchQuery, setSearchQuery] = useState(''); // Para el valor de búsqueda
-  const [selectedResource, setSelectedResource] = useState(null); // Para el recurso seleccionado
-  const [filteredRecursos, setFilteredRecursos] = useState([]); // Para almacenar los recursos filtrados
+  const [recursos, setRecursos] = useState([]); 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedResource, setSelectedResource] = useState(null); 
+  const [filteredRecursos, setFilteredRecursos] = useState([]);
 
   useEffect(() => {
     const fetchRecursosData = async () => {
