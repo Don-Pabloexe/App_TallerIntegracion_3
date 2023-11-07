@@ -118,7 +118,7 @@ function calendario() {
         if (selectedDay && horariosDisponibles[selectedDay]) {
           return (
             <View>
-              <Text>Selecciona una hora:</Text>
+              <Text style={ {textAlign:'center', padding: 5}}>Selecciona una hora:</Text>
               <ScrollView style={styles.hourScroll}>
               {horariosDisponibles[selectedDay].map((hour) => (
                 <TouchableOpacity
@@ -139,20 +139,31 @@ function calendario() {
             </View>
           );
         } else {
-          return <Text style={ {textAlign:'center', padding: 30}}>Primero selecciona un día</Text>;
+          return <Text></Text>;
         }
       };
     
       return (
         <View>
           <Calendar
-            style={{ borderRadius: 10, elevation: 4, margin: 40 }}
+            style={{ borderRadius: 10, elevation: 4, margin: 10 }}
             onDayPress={presionar}
             markedDates={Seleccion}
           />
-        <TouchableOpacity onPress={toggleModal} style={styles.button}>
+       
+
+          {renderHourSelection()}
+          <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={toggleModal} style={styles.button}>
   <Text style={styles.buttonText}>Agregar Hora</Text>
 </TouchableOpacity>
+<TouchableOpacity
+            onPress={guardarEventoEnBD}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Solicitar Evento</Text>
+          </TouchableOpacity>
+          </View>
 <Modal visible={isModalVisible} transparent animationType="slide">
   <View style={styles.modalContainer}>
     <Text style={styles.modalTitle}>Agregar Hora</Text>
@@ -177,15 +188,7 @@ function calendario() {
     </TouchableOpacity>
   </View>
 </Modal>
-
-          {renderHourSelection()}
-
-          <TouchableOpacity
-            onPress={guardarEventoEnBD}
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>Solicitar Evento</Text>
-          </TouchableOpacity>
+         
         </View>
       );
     }
@@ -199,20 +202,22 @@ function calendario() {
         borderColor: '#39C7F0',
         borderRadius: 5,
         width: 300,
-        left: 40
+       
       },
       hourScroll: {
         maxHeight: 250, // Ajusta la altura máxima según tus necesidades
-        marginBottom: 20
+        marginBottom: 20,
+        marginLeft: '13%'
       },
       button: {
         backgroundColor: '#2e70b8',
         padding: 10,
+        margin: 5,
         width: 150,
         height: 40,
         borderRadius: 5,
         position: "relative",
-        left: 130
+        
       },
       buttonText: {
         color: '#ffffff',
@@ -249,6 +254,11 @@ function calendario() {
       modalButtonText: {
         color: '#ffffff',
         textAlign: 'center',
+      },
+      buttonContainer: {
+        flexDirection: 'row', // Esto coloca los elementos en una fila
+        alignItems: 'center', // Esto alinea verticalmente los botones al centro
+        justifyContent: 'center'
       },
 
     });
