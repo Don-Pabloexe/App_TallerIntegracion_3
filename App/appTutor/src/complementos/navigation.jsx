@@ -11,6 +11,7 @@ import BlogScreen from './Blog';
 import Chatbot from './chatbot';
 import { Image, View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import WorkshopRegistrationScreen from './Nuevo'
+import Recordatorio from './Recordatorio';
 
 import LoginScreen from './login';
 import AccountDetails from './accountDetails'
@@ -325,6 +326,38 @@ const AppNavigator = () => {
         })}/>
 
         <Tab.Screen name = "Talleres" component = {WorkshopRegistrationScreen}
+          options={({ route }) => ( {
+          headerTitleAlign: 'center',
+          tabBarShowLabel: false,
+          backgroundColor: SECONDcolor,
+          headerStyle: {
+          backgroundColor: color,
+          height: 80
+          },
+          headerTintColor: 'white',
+          tabBarLabel: '',
+          tabBarActiveBackgroundColor: '#3690c7',
+
+          tabBarIcon: ({ focused, color, size }) => (
+            <MaterialCommunityIcons name = "robot-outline" color = {'white'} size = {tamaño} />       
+          ),
+
+          headerLeft: () => (
+            <TouchableOpacity style = {{marginLeft: 25, flexDirection: 'column', alignContent: 'center', alignItems: 'center'}} onPress = {handleGoToLogin}> 
+              <MaterialCommunityIcons name = 'account-arrow-left' color = 'white' size = {tamaño} style = {{}}/>  
+              <Text style = {styles.label}>Cerrar Sesión</Text>
+            </TouchableOpacity> 
+          ),
+
+          headerRight: () => (
+            <TouchableOpacity style = {{marginRight: 25, flexDirection: 'column', alignContent: 'center', alignItems: 'center'}} onPress = {{}}> 
+              <MaterialCommunityIcons name = 'account-circle' color = 'white' size = {tamaño} style = {{}}/>  
+              <Text style = {styles.label}>{username}</Text>
+            </TouchableOpacity> 
+          ),
+        })}/>
+
+        <Tab.Screen name = "Notifacaciones" component = {Recordatorio}
           options={({ route }) => ( {
           headerTitleAlign: 'center',
           tabBarShowLabel: false,
