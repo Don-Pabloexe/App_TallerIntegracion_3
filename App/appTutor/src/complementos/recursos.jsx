@@ -1,103 +1,135 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  Modal,
-  TextInput,
-} from 'react-native';
-import {
-  getFirestore,
-  collection,
-  query,
-  where,
-  getDocs,
-} from 'firebase/firestore';
+import { View, Text, TextInput, Button, FlatList, StyleSheet, Alert } from 'react-native';
 import { db } from './firebaseConfig';
+import { collection, addDoc, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { TouchableOpacity } from 'react-native';
+
 
 const RecursosScreen = () => {
-  const [recursos, setRecursos] = useState([]); // Para almacenar los datos de Firestore
-  const [searchQuery, setSearchQuery] = useState(''); // Para el valor de búsqueda
-  const [selectedResource, setSelectedResource] = useState(null); // Para el recurso seleccionado
-  const [filteredRecursos, setFilteredRecursos] = useState([]); // Para almacenar los recursos filtrados
+  const [userRole, setUserRole] = useState(null); // Rol del usuario inicialmente nulo
+  const [tituloRecurso, setTituloRecurso] = useState('');
+  const [subtituloRecurso, setSubtituloRecurso] = useState('');
+  const [descripcionRecurso, setDescripcionRecurso] = useState('');
+  const [recursos, setRecursos] = useState([]);
+  const [filtroTexto, setFiltroTexto] = useState('');
+  const [recursosFiltrados, setRecursosFiltrados] = useState([]);
+
+  const auth = getAuth();
+  const recursosCollectionRef = collection(db, 'recursos');
+  const q = query(recursosCollectionRef, orderBy("titulo")); // Ordena los recursos por título alfabéticamente
 
   useEffect(() => {
-    const fetchRecursosData = async () => {
-      try {
-        const recursosCollectionRef = collection(db, 'recursos');
-        const recursosQuery = query(
-          recursosCollectionRef,
-          where('titulo', '>=', searchQuery),
-          where('titulo', '<=', searchQuery + '\uf8ff')
-        );
-
-        const querySnapshot = await getDocs(recursosQuery);
-
-        const recursosData = [];
-
-        querySnapshot.forEach((doc) => {
-          const data = {
-            id: doc.id,
-            ...doc.data(),
-          };
-          recursosData.push(data);
-        });
-
-        setRecursos(recursosData);
-      } catch (error) {
-        console.error('Error al obtener datos:', error);
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserRole(user.displayName); // Asumir que el rol se almacena en 'displayName'
+      } else {
+        // User not logged in handling or user information not available
       }
+    });
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const newRecursos = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setRecursos(newRecursos);
+    });
+
+    return () => {
+      unsubscribeAuth();
+      unsubscribe();
     };
+  }, []);
 
-    fetchRecursosData();
-  }, [searchQuery]);
+  useEffect(() => {
+    if (filtroTexto.trim() === '') {
+      setRecursosFiltrados(recursos); // No filter text, show all recursos
+    } else {
+      // Filter list based on search text
+      const filteredData = recursos.filter((recurso) =>
+        recurso.titulo.toLowerCase().includes(filtroTexto.toLowerCase())
+      );
+      setRecursosFiltrados(filteredData); // Update the filtered recursos
+    }
+  }, [recursos, filtroTexto]);
 
-  // Función para abrir los detalles del recurso
-  const openResourceDetails = (resource) => {
-    setSelectedResource(resource);
-  };
+  const handleAddRecurso = async () => {
+    if (!tituloRecurso.trim() || !descripcionRecurso.trim()) {
+      Alert.alert('Error', 'Por favor, introduce el título y la descripción del recurso.');
+      return;
+    }
 
-  // Función para cerrar los detalles del recurso
-  const closeResourceDetails = () => {
-    setSelectedResource(null);
+    try {
+      await addDoc(recursosCollectionRef, {
+        titulo: tituloRecurso,
+        subtitulo: subtituloRecurso,
+        descripcion: descripcionRecurso,
+      });
+      Alert.alert('Éxito', 'Recurso añadido correctamente');
+      setTituloRecurso('');
+      setSubtituloRecurso('');
+      setDescripcionRecurso('');
+    } catch (error) {
+      Alert.alert('Error', `No se pudo añadir el recurso: ${error.message}`);
+    }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Recursos Académicos</Text>
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Buscar recursos..."
-        value={searchQuery}
-        onChangeText={(text) => setSearchQuery(text)}
-      />
-      <FlatList
-        data={recursos}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => openResourceDetails(item)}>
-            <View style={styles.resourceItem}>
-              <Text style={styles.resourceTitle}>{item.titulo}</Text>
-              <Text style={styles.resourceDescription}>{item.subtitulo}</Text>
-            </View>
+      {/* Role-based view to add resources */}
+      {userRole === 'asesor' && (
+        <View style={styles.addResourceSection}>
+          <TextInput
+            style={styles.input}
+            placeholder="Título del Recurso"
+            placeholderTextColor="#6e6e6e"
+            value={tituloRecurso}
+            onChangeText={setTituloRecurso}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Subtítulo del Recurso (opcional)"
+            placeholderTextColor="#6e6e6e"
+            value={subtituloRecurso}
+            onChangeText={setSubtituloRecurso}
+          />
+          <TextInput
+            style={[styles.input, styles.inputLarge]}
+            placeholder="Descripción del Recurso"
+            placeholderTextColor="#6e6e6e"
+            value={descripcionRecurso}
+            onChangeText={setDescripcionRecurso}
+            multiline
+          />
+          <TouchableOpacity style={styles.button} onPress={handleAddRecurso}>
+            <Text style={styles.buttonText}>Añadir Recurso</Text>
           </TouchableOpacity>
-        )}
+        </View>
+      )}
+
+      {/* Search bar */}
+      <TextInput
+        style={[styles.input, styles.searchBar]}
+        placeholder="Buscar Recursos"
+        placeholderTextColor="#6e6e6e"
+        value={filtroTexto}
+        onChangeText={setFiltroTexto}
       />
 
-      {selectedResource && (
-        <Modal animationType="slide" transparent={false} visible={!!selectedResource}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>{selectedResource.titulo}</Text>
-            <Text style={styles.modalDescription}>{selectedResource.subtitulo}</Text>
-            <Text style={styles.modalContent}>{selectedResource.descripcion}</Text>
-            <TouchableOpacity style={styles.closeButton} onPress={closeResourceDetails}>
-              <Text style={styles.closeButtonText}>Cerrar</Text>
-            </TouchableOpacity>
+      {/* List of available resources */}
+      <FlatList
+        data={recursosFiltrados}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>{item.titulo}</Text>
+            {item.subtitulo && <Text style={styles.cardSubtitle}>{item.subtitulo}</Text>}
+            <Text style={styles.cardContent}>{item.descripcion}</Text>
           </View>
-        </Modal>
-      )}
+        )}
+        style={styles.list}
+      />
     </View>
   );
 };
@@ -105,79 +137,74 @@ const RecursosScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  addResourceSection: {
+    backgroundColor: '#e8e8e8',
     padding: 16,
+    borderRadius: 10,
+    marginBottom: 20,
   },
-
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    textAlign: 'center'
-  },
-
-  searchInput: {
+  input: {
+    height: 50,
+    backgroundColor: '#fff',
+    marginBottom: 12,
+    borderWidth: 0.5,
+    borderColor: '#ddd',
+    borderRadius: 6,
+    paddingHorizontal: 15,
     fontSize: 16,
-    borderWidth: 1,
-    borderColor: 'black',
-    borderRadius: 8,
-    padding: 8,
-    marginBottom: 16,
-    width: '80%',
-    alignSelf: 'center',
-    textAlign: 'center'
   },
-
-  resourceItem: {
-    backgroundColor: '#E3E3E3',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-    textAlign: 'center'
+  inputLarge: {
+    minHeight: 100,
+    textAlignVertical: 'top',
   },
-
-  resourceTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
+  searchBar: {
+    backgroundColor: '#f2f2f2',
+    marginBottom: 20,
   },
-
-  resourceDescription: {
-    fontSize: 14,
-  },
-
-  modalContainer: {
-    flex: 1,
-    padding: 16,
+  button: {
+    backgroundColor: '#3498db',
+    padding: 15,
+    borderRadius: 6,
+    alignItems: 'center',
     justifyContent: 'center',
   },
-
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-
-  modalDescription: {
+  buttonText: {
+    color: '#fff',
     fontSize: 18,
-    marginBottom: 8,
+    fontWeight: '600',
   },
-
-  modalContent: {
-    fontSize: 16,
-    marginBottom: 16,
+  card: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+    marginBottom: 10,
   },
-
-  closeButton: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    padding: 8,
-    alignItems: 'center',
-  },
-
-  closeButtonText: {
-    color: 'white',
+  cardTitle: {
+    fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 5,
   },
+  cardSubtitle: {
+    fontSize: 14,
+    color: '#555',
+    marginBottom: 5,
+  },
+  cardContent: {
+    fontSize: 14,
+    color: '#555',
+  },
+  list: {
+    marginBottom: 10,
+  },
+  // ... Añade otros estilos que necesites aquí
 });
 
 export default RecursosScreen;
