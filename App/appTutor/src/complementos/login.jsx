@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, ActivityIndicator, Modal, Pressable } from 'react-native';
-import { firebase_AUTH } from './firebaseConfig';
+import { firebase_AUTH, db } from './firebaseConfig';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { collection, addDoc} from "firebase/firestore"; 
 const image = require('./../img/logo_uct.png');
 
 const LoginScreen = ({ navigation }) => {
@@ -59,7 +59,12 @@ const LoginScreen = ({ navigation }) => {
 
             // Agrega el campo "role" al perfil del usuario
             await updateProfile(response.user, { displayName: selectedRole });
-
+            
+            await addDoc(collection(db, 'usuarios'), {
+               
+                correoElectronico: email,
+                cargo: selectedRole
+              });
             alert('Se registró correctamente');
         } catch (error) {
             console.log(error);

@@ -5,6 +5,17 @@ import {
 import { addDoc, collection, onSnapshot, query, orderBy, doc, updateDoc } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
+
 
 const ChatScreen = () => {
   const [articles, setArticles] = useState([]);
@@ -13,6 +24,64 @@ const ChatScreen = () => {
   const [comments, setComments] = useState({});
   const [newComment, setNewComment] = useState('');
   const [username, setUsername] = useState('Usuario Anónimo');
+  const [date, setDate] = useState(new Date());
+
+  const scheduleNotification = async () => {
+     
+    const now = new Date();
+    const timestamp = now.getTime() + 5000; // Notificación después de 5 segundos
+
+    const schedulingOptions = {
+      content: {
+        title: '¡Nuevo Like!',
+        body: 'like',
+      },
+      trigger: {
+        seconds: 5,
+        repeats: false,
+      },
+    };
+    await Notifications.scheduleNotificationAsync(schedulingOptions);
+      Alert.alert('¡Notificación programada!', `El recordatorio está programado para: ${new Date(timestamp).toString()}`);
+  }
+
+  const scheduleNotification2 = async () => {
+     
+    const now = new Date();
+    const timestamp = now.getTime() + 5000; // Notificación después de 5 segundos
+
+    const schedulingOptions = {
+      content: {
+        title: 'Nueva publicacion',
+        body: 'publicacion',
+      },
+      trigger: {
+        seconds: 5,
+        repeats: false,
+      },
+    };
+    await Notifications.scheduleNotificationAsync(schedulingOptions);
+      Alert.alert('¡Notificación programada!', `El recordatorio está programado para: ${new Date(timestamp).toString()}`);
+  }
+  const scheduleNotification3= async () => {
+     
+    const now = new Date();
+    const timestamp = now.getTime() + 5000; // Notificación después de 5 segundos
+
+    const schedulingOptions = {
+      content: {
+        title: '¡Nuevo comentario!',
+        body: 'Comentariob d',
+      },
+      trigger: {
+        seconds: 5,
+        repeats: false,
+      },
+    };
+    await Notifications.scheduleNotificationAsync(schedulingOptions);
+      Alert.alert('¡Notificación programada!', `El recordatorio está programado para: ${new Date(timestamp).toString()}`);
+  }
+
 
   const fetchCommentsForArticle = async (articleId) => {
     const unsubscribeComments = onSnapshot(
@@ -76,11 +145,14 @@ const ChatScreen = () => {
       const index = article.likedBy.indexOf(username);
       article.likedBy.splice(index, 1);
     } else {
+      scheduleNotification();
       article.likes = (article.likes || 0) + 1;
       if (!article.likedBy) {
+        
         article.likedBy = [];
       }
       article.likedBy.push(username);
+      
     }
 
     await updateDoc(articleRef, {
@@ -91,6 +163,7 @@ const ChatScreen = () => {
 
   const sendArticle = async () => {
     if (newArticle.trim() !== '') {
+      scheduleNotificationw2();
       try {
         await addDoc(collection(db, 'articles'), {
           text: newArticle,
@@ -108,6 +181,7 @@ const ChatScreen = () => {
 
   const sendComment = async () => {
     if (selectedArticleId && newComment.trim() !== '') {
+      scheduleNotification3();
       try {
         await addDoc(collection(doc(db, 'articles', selectedArticleId), 'comments'), {
           text: newComment,
