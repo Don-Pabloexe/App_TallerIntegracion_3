@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import { View, Text, TextInput, FlatList, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { addDoc, collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,29 +7,31 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState('Usuario Anónimo');
 
   useEffect(() => {
     const fetchEmail = async () => {
-      const storedEmail = await AsyncStorage.getItem('userEmail');
-      if (storedEmail) {
-        setUsername(storedEmail.split('@')[0]);
-      }
+        const storedEmail = await AsyncStorage.getItem('userEmail');
+        if(storedEmail) {
+            const usernamePart = storedEmail.split('@')[0]; // Toma solo la parte antes del '@'
+            setUsername(usernamePart);
+        }
     };
 
     fetchEmail();
 
-    const messagesQuery = query(collection(db, 'messages'), orderBy('timestamp', 'asc'));
+    const unsubscribe = onSnapshot(
+      query(collection(db, 'messages'), orderBy('timestamp', 'asc')),
+      (snapshot) => {
+        const fetchedMessages = snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setMessages(fetchedMessages);
+      }
+    );
 
-    const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
-      const fetchedMessages = snapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setMessages(fetchedMessages);
-    });
-
-    return unsubscribe;
+    return () => unsubscribe();
   }, []);
 
   const sendMessage = async () => {
@@ -46,7 +39,7 @@ const ChatScreen = () => {
       try {
         await addDoc(collection(db, 'messages'), {
           text: newMessage,
-          username: username || 'Anónimo',
+          username,  // Nombre de usuario (parte del email antes del '@')
           timestamp: new Date(),
         });
         setNewMessage('');
@@ -56,34 +49,25 @@ const ChatScreen = () => {
     }
   };
 
-  const renderItem = ({ item }) => {
-    const isCurrentUserMessage = item.username === username;
-    return (
-      <View
-        style={[
-          styles.messageContainer,
-          isCurrentUserMessage ? styles.currentUserMessage : styles.otherUserMessage,
-        ]}>
-        <Text style={styles.messageText}>{item.username}: {item.text}</Text>
-      </View>
-    );
-  };
-
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Text style={styles.title}>Chat Colaborativo</Text>
       <FlatList
         data={messages}
-        renderItem={renderItem}
+        renderItem={({ item }) => (
+          <View style={styles.messageContainer}>
+            <Text style={styles.messageText}>{item.username}: {item.text}</Text>
+          </View>
+        )}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.messagesList}
       />
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Escribe un mensaje..."
+          placeholder="Escribe un mensaje"
           value={newMessage}
-          onChangeText={setNewMessage}
+          onChangeText={(text) => setNewMessage(text)}
         />
         <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
           <Text style={styles.sendButtonText}>Enviar</Text>
@@ -109,6 +93,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   messageContainer: {
+    backgroundColor: '#E3E3E3',
     borderRadius: 8,
     padding: 8,
     marginBottom: 8,
@@ -145,14 +130,6 @@ const styles = StyleSheet.create({
   sendButtonText: {
     color: 'white',
     fontWeight: 'bold',
-  },
-  currentUserMessage: {
-    backgroundColor: '#dcf8c6',
-    alignSelf: 'flex-end',
-  },
-  otherUserMessage: {
-    backgroundColor: '#e3e3e3',
-    alignSelf: 'flex-start',
   },
 });
 
