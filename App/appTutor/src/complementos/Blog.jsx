@@ -163,7 +163,7 @@ const ChatScreen = () => {
 
   const sendArticle = async () => {
     if (newArticle.trim() !== '') {
-      scheduleNotificationw2();
+      scheduleNotification2();
       try {
         await addDoc(collection(db, 'articles'), {
           text: newArticle,

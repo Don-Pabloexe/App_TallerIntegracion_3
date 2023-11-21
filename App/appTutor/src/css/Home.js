@@ -6,7 +6,7 @@ import Horario from './../img/libreta.png';
 import chatbot from './../img/chatbot.png';
 import blog from './../img/blog.png';
 import recursos from './../img/recursos.png';
-
+import door from './../img/door.png';
 const CommonStyles = StyleSheet.create({
 
   container: {
@@ -87,4 +87,4 @@ const styl = StyleSheet.create({
   },
 });
 
-export { styl, CommonStyles, HomeStyles, Info, Tutor, Sala, Horario, chatbot, blog, recursos};
+export { styl, CommonStyles, HomeStyles, Info, Tutor, Sala, Horario, chatbot, blog, recursos, door};

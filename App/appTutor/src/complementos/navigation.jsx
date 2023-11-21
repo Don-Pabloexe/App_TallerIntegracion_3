@@ -12,7 +12,7 @@ import Chatbot from './chatbot';
 import { Image, View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import WorkshopRegistrationScreen from './Nuevo'
 
-import calendario from './calendario';
+import Calendario from './Calendario';
 
 import LoginScreen from './login';
 import AccountDetails from './accountDetails'
@@ -65,9 +65,14 @@ const Acceder = () => {
           headerTitle: () => <HeaderAccountDetails />,
         }}
       />
+      
 
       <Stack.Screen name = "accesoexitoso" component = {AppNavigator} options = {{ headerShown: false }}/>
-      
+      <Stack.Screen name="Tutores" component={Tutores} />
+      <Stack.Screen name="Salas" component={DetailsScreen} />
+      <Stack.Screen name="Profesores" component={Horarios} />
+      <Stack.Screen name="Blog Educativo" component={BlogScreen} />
+      <Stack.Screen name="Talleres" component={WorkshopRegistrationScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -114,6 +119,7 @@ const AppNavigator = () => {
           headerTintColor: 'white',
           tabBarLabel: '',
           tabBarActiveBackgroundColor: '#3690c7',
+          
 
           tabBarIcon: ({ focused, color, size }) => (
             <MaterialCommunityIcons name = 'home-outline' color = 'white' size = {tamaño} />       
@@ -134,133 +140,6 @@ const AppNavigator = () => {
           ),
         })}/>
 
-        <Tab.Screen name = "Salas" component = {DetailsScreen} screenOptions = {{tabBarStyle: {height: 75, backgroundColor: color}}}   
-          options = {({ route }) => ( {
-          headerTitleAlign: 'center',
-          tabBarShowLabel: false,
-          backgroundColor: SECONDcolor,
-          headerStyle: {
-          backgroundColor: color,
-          height: 80
-          },
-          headerTintColor: 'white',
-          tabBarLabel: '',
-          tabBarActiveBackgroundColor: '#3690c7',
-
-          tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "door" color = {'white'} size = {tamaño} />       
-          ),
-
-          headerLeft: () => (
-            <TouchableOpacity style = {{marginLeft: 25, flexDirection: 'column', alignContent: 'center', alignItems: 'center'}} onPress = {handleGoToLogin}> 
-              <MaterialCommunityIcons name = 'account-arrow-left' color = 'white' size = {tamaño} style = {{}}/>  
-              <Text style = {styles.label}>Cerrar Sesión</Text>
-            </TouchableOpacity> 
-          ),
-
-          headerRight: () => (
-            <TouchableOpacity style = {{marginRight: 25, flexDirection: 'column', alignContent: 'center', alignItems: 'center'}} onPress = {{}}> 
-              <MaterialCommunityIcons name = 'account-circle' color = 'white' size = {tamaño} style = {{}}/>  
-              <Text style = {styles.label}>{username}</Text>
-            </TouchableOpacity> 
-          ),
-        })}/>
-
-        <Tab.Screen name = "Tutores" component={Tutores}
-          options={({ route }) => ( {
-          headerTitleAlign: 'center',
-          tabBarShowLabel: false,
-          backgroundColor: SECONDcolor,
-          headerStyle: {
-          backgroundColor: color,
-          height: 80
-          },
-          headerTintColor: 'white',
-          tabBarLabel: '',
-          tabBarActiveBackgroundColor: '#3690c7',
-
-          tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "school-outline" color = {'white'} size = {tamaño} />       
-          ),
-
-          headerLeft: () => (
-            <TouchableOpacity style = {{marginLeft: 25, flexDirection: 'column', alignContent: 'center', alignItems: 'center'}} onPress = {handleGoToLogin}> 
-              <MaterialCommunityIcons name = 'account-arrow-left' color = 'white' size = {tamaño} style = {{}}/>  
-              <Text style = {styles.label}>Cerrar Sesión</Text>
-            </TouchableOpacity> 
-          ),
-
-          headerRight: () => (
-            <TouchableOpacity style = {{marginRight: 25, flexDirection: 'column', alignContent: 'center', alignItems: 'center'}} onPress = {{}}> 
-              <MaterialCommunityIcons name = 'account-circle' color = 'white' size = {tamaño} style = {{}}/>  
-              <Text style = {styles.label}>{username}</Text>
-            </TouchableOpacity> 
-          ),
-        })}/>
-
-        <Tab.Screen name = "Horarios" component = {Horarios}
-          options={({ route }) => ( {
-          headerTitleAlign: 'center',
-          tabBarShowLabel: false,
-          backgroundColor: SECONDcolor,
-          headerStyle: {
-          backgroundColor: color,
-          height: 80
-          },
-          headerTintColor: 'white',
-          tabBarLabel: '',
-          tabBarActiveBackgroundColor: '#3690c7',
-
-          tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "book-open-page-variant-outline" color = {'white'} size = {tamaño} />       
-          ),
-
-          headerLeft: () => (
-            <TouchableOpacity style = {{marginLeft: 25, flexDirection: 'column', alignContent: 'center', alignItems: 'center'}} onPress = {handleGoToLogin}> 
-              <MaterialCommunityIcons name = 'account-arrow-left' color = 'white' size = {tamaño} style = {{}}/>  
-              <Text style = {styles.label}>Cerrar Sesión</Text>
-            </TouchableOpacity> 
-          ),
-
-          headerRight: () => (
-            <TouchableOpacity style = {{marginRight: 25, flexDirection: 'column', alignContent: 'center', alignItems: 'center'}} onPress = {{}}> 
-              <MaterialCommunityIcons name = 'account-circle' color = 'white' size = {tamaño} style = {{}}/>  
-              <Text style = {styles.label}>{username}</Text>
-            </TouchableOpacity> 
-          ),
-        })}/>
-
-        <Tab.Screen name = "Blog" component = {BlogScreen}
-          options={({ route }) => ( {
-          headerTitleAlign: 'center',
-          tabBarShowLabel: false,
-          backgroundColor: SECONDcolor,
-          headerStyle: {
-          backgroundColor: color,
-          height: 80
-          },
-          headerTintColor: 'white',
-          tabBarLabel: '',
-          tabBarActiveBackgroundColor: '#3690c7',
-
-          tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "account-group" color = {'white'} size = {tamaño} />       
-          ),
-
-          headerLeft: () => (
-            <TouchableOpacity style = {{marginLeft: 25, flexDirection: 'column', alignContent: 'center', alignItems: 'center'}} onPress = {handleGoToLogin}> 
-              <MaterialCommunityIcons name = 'account-arrow-left' color = 'white' size = {tamaño} style = {{}}/>  
-              <Text style = {styles.label}>Cerrar Sesión</Text>
-            </TouchableOpacity> 
-          ),
-
-          headerRight: () => (
-            <TouchableOpacity style = {{marginRight: 25, flexDirection: 'column', alignContent: 'center', alignItems: 'center'}} onPress = {{}}> 
-              <MaterialCommunityIcons name = 'account-circle' color = 'white' size = {tamaño} style = {{}}/>  
-              <Text style = {styles.label}>{username}</Text>
-            </TouchableOpacity> 
-          ),
-        })}/>
 
         <Tab.Screen name = "Recursos" component = {RecursosScreen}
           options={({ route }) => ( {
@@ -326,41 +205,11 @@ const AppNavigator = () => {
           ),
         })}/>
 
-        <Tab.Screen name = "Talleres" component = {WorkshopRegistrationScreen}
-          options={({ route }) => ( {
-          headerTitleAlign: 'center',
-          tabBarShowLabel: false,
-          backgroundColor: SECONDcolor,
-          headerStyle: {
-          backgroundColor: color,
-          height: 80
-          },
-          headerTintColor: 'white',
-          tabBarLabel: '',
-          tabBarActiveBackgroundColor: '#3690c7',
-
-          tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "robot-outline" color = {'white'} size = {tamaño} />       
-          ),
-
-          headerLeft: () => (
-            <TouchableOpacity style = {{marginLeft: 25, flexDirection: 'column', alignContent: 'center', alignItems: 'center'}} onPress = {handleGoToLogin}> 
-              <MaterialCommunityIcons name = 'account-arrow-left' color = 'white' size = {tamaño} style = {{}}/>  
-              <Text style = {styles.label}>Cerrar Sesión</Text>
-            </TouchableOpacity> 
-          ),
-
-          headerRight: () => (
-            <TouchableOpacity style = {{marginRight: 25, flexDirection: 'column', alignContent: 'center', alignItems: 'center'}} onPress = {{}}> 
-              <MaterialCommunityIcons name = 'account-circle' color = 'white' size = {tamaño} style = {{}}/>  
-              <Text style = {styles.label}>{username}</Text>
-            </TouchableOpacity> 
-          ),
-        })}/>
+        
 
         
 
-<Tab.Screen name = "Calendario" component = {calendario}
+<Tab.Screen name = "Calendario" component = {Calendario}
           options={({ route }) => ( {
           headerTitleAlign: 'center',
           tabBarShowLabel: false,
@@ -374,7 +223,7 @@ const AppNavigator = () => {
           tabBarActiveBackgroundColor: '#3690c7',
 
           tabBarIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name = "robot-outline" color = {'white'} size = {tamaño} />       
+            <MaterialCommunityIcons name = "calendar" color = {'white'} size = {tamaño} />       
           ),
 
           headerLeft: () => (

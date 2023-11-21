@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { View, TouchableOpacity, Image, Text, StyleSheet, ImageBackground } from 'react-native';
-import { CommonStyles, HomeStyles, Info, Tutor, Sala, Horario, blog, recursos, chatbot } from './../css/Home';
+import { CommonStyles, HomeStyles, Info, Tutor, Sala, Horario, blog, recursos, chatbot, door } from './../css/Home';
 
 const HomeScreen = ({ navigation }) => {
   return (
@@ -14,7 +14,7 @@ const HomeScreen = ({ navigation }) => {
         >
           <Image
             style={HomeStyles.image}
-            source={Sala}
+            source={door}
           />
         </TouchableOpacity>
 
@@ -32,7 +32,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.row}>
         <TouchableOpacity
           style={HomeStyles.button}
-          onPress={() => navigation.navigate('Horarios')}
+          onPress={() => navigation.navigate('Profesores')}
         >
           <Image
             style={HomeStyles.image}
@@ -42,7 +42,7 @@ const HomeScreen = ({ navigation }) => {
 
         <TouchableOpacity
           style={HomeStyles.button}
-          onPress={() => navigation.navigate('Blog')}
+          onPress={() => navigation.navigate('Blog Educativo')}
         >
           <Image
             style={HomeStyles.image}
@@ -56,7 +56,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.row}>
         <TouchableOpacity
           style={HomeStyles.button}
-          onPress={() => navigation.navigate('recursos')}
+          onPress={() => navigation.navigate('Talleres')}
         >
           <Image
             style={HomeStyles.image}
@@ -64,15 +64,7 @@ const HomeScreen = ({ navigation }) => {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={HomeStyles.button}
-          onPress={() => navigation.navigate('Chatbot')}
-        >
-          <Image
-            style={HomeStyles.image}
-            source={chatbot}
-          />
-        </TouchableOpacity>
+       
         </View>
       {/* Agrega más filas de botones si es necesario */}
     </View>

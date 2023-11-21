@@ -19,8 +19,6 @@ Notifications.setNotificationHandler({
   }),
 });
 
-
-
 const getUserEmail = async () => {
   try {
     const userEmail = await AsyncStorage.getItem('userEmail');
@@ -34,7 +32,7 @@ const getUserEmail = async () => {
   }
 };
 
-function calendario() {
+function Calendario() {
     const [Seleccion, setSeleccion] = useState({});
     const [selectedDay, setSelectedDay] = useState(''); // El día seleccionado
     const [selectedHour, setSelectedHour] = useState(''); // La hora seleccionada
@@ -58,6 +56,7 @@ function calendario() {
     const [showButtons, setShowButtons] = useState(true);
     const [buttonsHidden, setButtonsHidden] = useState(false);
     const [mostrarSolicitudes, setMostrarSolicitudes] = useState(false);
+    const [mostrarSolicitudesdetails, setMostrarSolicitudesdetails] = useState(true);
     const [solicitudSeleccionada, setSolicitudSeleccionada] = useState(null);
     const [solicitudesEventos, setSolicitudesEventos] = useState([]);
     const [date, setDate] = useState(new Date());
@@ -178,9 +177,6 @@ function calendario() {
               const querySnapshot = await getDocs(verSolicitudes);
       
               const solicitudes = [];
-              
-              
-      
               querySnapshot.forEach((doc) => {
                 const data = doc.data();
                 // Agrega todas las propiedades necesarias de la solicitud
@@ -216,6 +212,52 @@ function calendario() {
       
         solicitudesss();
       }, [mostrarSolicitudes]);
+
+      useEffect(() => {
+        const solicitudesaceptadas = async () => {
+          const userEmail = await getUserEmail();
+          setUserEmail(userEmail);
+          if (selectedDay) {
+            try {
+              const verSolicitudes = collection(db, 'solicitudesaceptadas');
+              const querySnapshot = await getDocs(verSolicitudes);
+      
+              const solicitudes = [];
+
+              querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                // Agrega todas las propiedades necesarias de la solicitud
+                if (data.asesor === userEmail && data.fecha === selectedDay) {
+                 
+
+                const solicitud = {
+                  id: doc.id, // Puedes utilizar el ID del documento como identificador único
+                  usuario: data.usuario,
+                  asesor: data.asesor,
+                  fecha: data.fecha,
+                  hora: data.hora,
+                  // Agrega más atributos según sea necesario
+                };
+      
+                solicitudes.push(solicitud);
+
+                
+              }
+              
+              });
+              setSolicitudesEventos(solicitudes);
+              // Ahora tienes un arreglo de todas las solicitudes con todos sus datos
+              console.log('Solicitudes:', solicitudes);
+              
+            } catch (error) {
+              console.error('Error al obtener datos:', error);
+            }
+            
+          }
+        };
+      
+        solicitudesaceptadas();
+      }, [selectedDay]);
 
       useEffect(() => {
         const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
@@ -293,12 +335,12 @@ function calendario() {
       const mostrarDetalleSolicitud = (solicitud) => {
         setSolicitudSeleccionada(solicitud);
         // Mostrar la ventana emergente o modal
-        setMostrarSolicitudes(true);
+        setMostrarSolicitudesdetails(true);
       };
       const ListaSolicitudes = () => {
         return (
           <View style={styles.listaSolicitudesContainer}>
-            <Text style={styles.titulo}>Solicitudes de Evento</Text>
+            <Text style={styles.titulo2}>Solicitudes de Evento</Text>
             <ScrollView style={styles.hourScroll}>
               {solicitudesEventos.map((solicitud) => (
                 <TouchableOpacity
@@ -317,10 +359,32 @@ function calendario() {
           </View>
         );
       };
+      const ListaAceptadas = () => {
+        return (
+          <View style={styles.listaSolicitudesContainer}>
+            <Text style={styles.titulo2}>Reunion dia {selectedDay}: </Text>
+            <ScrollView style={styles.hourScroll}>
+              {solicitudesEventos.map((solicitud) => (
+                <TouchableOpacity
+                  key={solicitud.id}
+                  style={styles.solicitudItem}
+                 
+                >
+                  <Text>Usuario: {solicitud.usuario}</Text>
+                  <Text>Asesor: {solicitud.asesor}</Text>
+                  <Text>Fecha: {solicitud.fecha}</Text>
+                  <Text>Hora: {solicitud.hora}</Text>
+                  {/* Agrega más detalles si es necesario */}
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        );
+      };
       
       const DetalleSolicitud = ({ solicitud }) => {
         const aceptarSolicitud = async () => {
-          console.log('buenassss')
+          setMostrarSolicitudesdetails(true)
           try {
             // Agregar la solicitud a la colección 'solicitudesaceptadas'
             await addDoc(collection(db, 'solicitudesaceptadas'), {
@@ -334,7 +398,9 @@ function calendario() {
             await deleteDoc(doc(db, 'solicitudes', solicitud.id));
       
             // Cerrar la ventana de detalles de la solicitud
-            setMostrarSolicitudes(false);
+            setMostrarSolicitudes(false)
+            setMostrarSolicitudes(true)
+            setMostrarSolicitudesdetails(false);
           } catch (error) {
             console.error('Error al aceptar la solicitud:', error);
           }
@@ -346,23 +412,26 @@ function calendario() {
             await deleteDoc(doc(db, 'solicitudes', solicitud.id));
       
             // Cerrar la ventana de detalles de la solicitud
-            setMostrarSolicitudes(false);
+            setMostrarSolicitudes(false)
+            setMostrarSolicitudes(true)
+            setMostrarSolicitudesdetails(false);
           } catch (error) {
             console.error('Error al rechazar la solicitud:', error);
           }
         };
-      
+        if(mostrarSolicitudesdetails){
         return (
+          
           <Modal visible={mostrarSolicitudes} transparent animationType="slide">
             
             <View style={styles.detalleContainer}>
               <Text style={styles.titulo}>Detalles de la Solicitud</Text>
-              <Text style = {styles.detallestext}>Asesor: {solicitud.usuario}</Text>
+              <Text style = {styles.detallestext}>Docente: {solicitud.usuario}</Text>
               <Text style = {styles.detallestext}>Asesor: {solicitud.asesor}</Text>
               <Text style = {styles.detallestext}>Fecha: {solicitud.fecha}</Text>
               <Text style = {styles.detallestext}>Hora: {solicitud.hora}</Text>
       
-              {/* Agregar botones de Aceptar y Rechazar aquí */}
+             
               <View style={styles.botonesContainer}>
                 <TouchableOpacity onPress={aceptarSolicitud} style={styles.aceptarButton}>
                   <Text style={styles.aceptarButtonText}>Aceptar</Text>
@@ -374,14 +443,21 @@ function calendario() {
               </View>
       
               <TouchableOpacity
-                onPress={() => setMostrarSolicitudes(false)}
+                onPress={() => setMostrarSolicitudesdetails(false)}
                 style={styles.cerrarButton}
               >
                 <Text style={styles.cerrarButtonText}>Cerrar</Text>
               </TouchableOpacity>
             </View>
           </Modal>
+      
         );
+        }
+      };
+      const volverASeleccionarAsesor = () => {
+        setShowButtons(true);
+        setSelectedAsesor(null);
+        
       };
     const renderHourSelection = () => {
         if (selectedDay && horariosDisponibles[selectedDay]) {
@@ -418,7 +494,8 @@ function calendario() {
           {userRole === 'docente' && (
             <View>
               {showButtons &&(
-              <View>
+              <View style = {styles.containerlist}>
+                <Text style = {styles.titulo2}>Seleccione un asesor:</Text>
              {asesores.map((asesor, index) => (
       <TouchableOpacity
         key={index}
@@ -429,9 +506,9 @@ function calendario() {
           toggleButtons()
           
         }}
-        style={styles.button} // Aplica estilos a cada botón
+        style={styles.buttonlist} // Aplica estilos a cada botón
       >
-        <Text>{asesor}</Text>
+        <Text style={styles.aceptarButtonText}>{asesor}</Text>
       </TouchableOpacity>
     ))}
     </View>
@@ -439,18 +516,22 @@ function calendario() {
             {selectedAsesor && (
               <View>
                 <View>
+                <TouchableOpacity onPress={volverASeleccionarAsesor} style={styles.buttonvolver}>
+                <Icon name="chevron-left" size={20} color="black" />
+                 
+                </TouchableOpacity>
           <Calendar
             style={{ borderRadius: 10, elevation: 4, margin: 10 }}
             onDayPress={presionar}
             markedDates={Seleccion}
           />
-       
 
           {renderHourSelection()}
           <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={toggleModal} style={styles.button}>
   <Text style={styles.buttonText}>Agregar Hora</Text>
 </TouchableOpacity>
+
 <TouchableOpacity
             onPress={guardarEventoEnBD}
             style={styles.button}
@@ -500,17 +581,30 @@ function calendario() {
               style={styles.iconContainer}
               
             >
-              <Icon name="bell" size={30} color="#000" />
+              <Icon name="bell" size={25} color="#000" style={styles.notificaciones}/>
             </TouchableOpacity>
+            
             
             {mostrarSolicitudes && <ListaSolicitudes />}
             {solicitudSeleccionada && (
             <DetalleSolicitud solicitud={solicitudSeleccionada} />
             )}
             {console.log(solicitudesEventos[0])}
-           
-
-           
+           {!mostrarSolicitudes &&(
+            
+            <Calendar
+            style={{ borderRadius: 10, elevation: 4, margin: 10, width: 330 }}
+            onDayPress={presionar}
+            markedDates={Seleccion}
+          />
+              )}    
+               {!mostrarSolicitudes &&(
+            
+            
+          
+          <ListaAceptadas />
+            
+              )}  
           </View>
           )}
 
@@ -531,7 +625,8 @@ function calendario() {
        
       },
       hourScroll: {
-        maxHeight: 250, // Ajusta la altura máxima según tus necesidades
+        maxHeight: 350, // Ajusta la altura máxima según tus necesidades
+        marginTop: 10,
         marginBottom: 20,
         marginLeft: '13%'
       },
@@ -595,6 +690,7 @@ function calendario() {
       },
       listaSolicitudesContainer: {
         padding: 10,
+        
       },
       solicitudItem: {
         backgroundColor: '#EFEFEF',
@@ -644,6 +740,7 @@ function calendario() {
       },
       aceptarButtonText: {
         color: 'white',
+        textAlign: 'center'
       },
       rechazarButton: {
         backgroundColor: '#F44336',
@@ -667,6 +764,35 @@ function calendario() {
       },
       detallestext: {
         color: '#ffffff'
+      },
+      buttonvolver: {
+        
+        padding: 15,
+        width: '15%',
+        paddingTop:25
+      },
+      titulo2: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        color: 'black',
+        textAlign: 'center'
+      },
+      containerlist: {
+        alignItems: 'center',
+        padding: 20
+      },
+      buttonlist: {
+        backgroundColor: '#8cc2ff',
+        padding: 10,
+        margin: 5,
+        width: 250,
+        height: 40,
+        borderRadius: 5,
+      },
+      notificaciones: {
+        marginTop: 50
+       
       }
     });
-export default calendario;
+export default Calendario;
